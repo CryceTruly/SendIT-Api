@@ -15,26 +15,13 @@ def get_parcels():
 # GET parcels/id
 @app.route('/parcels/<int:id>')
 def get_a_parcel(id):
-    parcel = {}
+    theparcel = []
     for parcel in parcels:
         if parcel['id'] == id:
-            parcel = {
-                'id': id,
-                'pickup_address': parcel['pickup_address'],
-                'destination_address': parcel['destination_address'],
-                'comment_description': parcel['comment_description'],
-                'status': parcel['status'],
-                'current_location': parcel['current_location'],
-                'created': parcel['created'],
-                'user_id': parcel['user_id'],
-                'recipient_address': parcel['recipient_address'],
-                'recipient_phone': parcel['recipient_phone'],
-                'recipient_email': parcel['recipient_email']
-
-            }
-            return jsonify(parcel), 200
-
-    return jsonify(parcel)
+            theparcel.append(parcel)
+    if len(theparcel) == 0:
+        return jsonify({"msg": "parcel request not found"}), 404
+    return jsonify(theparcel[0])
 
 
 # POST /parcels
@@ -89,8 +76,11 @@ def cancel_parcel_request(id):
 
             }
             parcel.update(cancelled_parcel)
+    if len(cancelled_parcel) == 0:
+        return jsonify({"msg": "parcel request was dooes not exist"}), 404
 
-    return jsonify({"msg": "parcel request cancelled"}, cancelled_parcel)
+    return jsonify({"msg": "parcel request was cancelled successfully", "status": cancelled_parcel.get("status"),
+                    "id": cancelled_parcel.get("id")}), 200
 
 
 def is_valid_request(newparcel):
@@ -205,7 +195,7 @@ def create_user():
 
 @app.route('/users/<int:id>/parcels')
 def get_user_parcels(id):
-    user_parcels=[]
+    user_parcels = []
     for parcel in parcels:
         if parcel['user_id'] == id:
             user_parcels.append(parcel)
