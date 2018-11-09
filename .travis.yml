@@ -1,4 +1,6 @@
-language: python3
+# Existing Python versions
+python:
+  - 3.6
 
 sudo: required
 
