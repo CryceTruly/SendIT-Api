@@ -2,5 +2,7 @@ language: python
 
 sudo: required
 
+install: "pip install -r requirements.txt"
+
 script:
-- echo "travis set up good"
+- echo "travis set up correctly"
