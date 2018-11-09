@@ -12,7 +12,7 @@ COV = coverage.coverage(
     branch=True,
     include='app/*',
     omit=[
-        'app/auth/__init__.py'
+        'app/__init__.py'
     ]
 )
 COV.start()
