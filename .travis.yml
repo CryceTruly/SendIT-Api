@@ -1,0 +1,6 @@
+language: python
+
+sudo: required
+
+script:
+- echo "travis set up good"
