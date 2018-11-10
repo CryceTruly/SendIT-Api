@@ -8,10 +8,8 @@ install:
 # command to run tests
 script:
   - python manage.py test
-  - python manage.py cov
-  - coverage report
 
 sudo: required
 
-after_success: 
-- coveralls
+# after_success: 
+# - coveralls
