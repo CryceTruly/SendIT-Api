@@ -1,9 +1,12 @@
-from flask import Flask, jsonify, request, Response, json
+from flask import Flask, jsonify, request, Response, json, Blueprint
 from app.endpoints import parcels
 import datetime
-app = Flask(__name__)
+from validate_email_address import validate_email
+import re
 
-@app.route('/api/v1/users', methods=['GET'])
+user_print = Blueprint('user_print', __name__)
+
+@user_print.route('/api/v1/users', methods=['GET'])
 def getall_users():
     return jsonify({"users": users}), 200
 
@@ -42,19 +45,23 @@ users = [
 ]
 
 
-# CREATE A NEW USER
-@app.route('/api/v1/users', methods=['POST'])
+@user_print.route('/api/v1/users', methods=['POST'])
 def create_user():
-    """create new user"""
+    """creates new user"""
     request_data = request.get_json()
+    if not is_valid_user_request(request_data):
+        return jsonify({"success": False, "msg": "Bad request"}), 400
 
-    if is_valid_user_request(request_data):
+    if not validate_email(request_data['email']):
+        return jsonify({"success": False, "msg": "Email is badly formatted"}), 401
+            
 
-        for user in users:
-            if user['email'] == request_data['email']:
-                return jsonify({"success": False, "msg": "Email is already taken"}), 200
-            if user['username'] == request_data['username']:
-                return jsonify({"success": False, "msg": "Username is already taken"}), 200
+    
+    for user in users:
+        if user['email'] == request_data['email']:
+            return jsonify({"success": False, "msg": "Email is already taken"}), 401
+        if user['username'] == request_data['username']:
+            return jsonify({"success": False, "msg": "Username is already taken"}), 401
 
         newuser = {
             "user_id": len(users) + 1,
@@ -69,16 +76,17 @@ def create_user():
 
         users.append(newuser)
         return jsonify({"success": True, "user_id": newuser.get('user_id')}), 201
-    else:
-        return jsonify({"success": False, "msg": "Bad request"}), 400
+    
 
 
-@app.route('/api/v1/users/<int:id>/parcels')
+@user_print.route('/api/v1/users/<int:id>/parcels')
 def get_user_parcels(id):
     user_parcels = []
     for parcel in parcels:
         if parcel['user_id'] == id:
             user_parcels.append(parcel)
+
+    
     return jsonify({"user_parcel_orders": user_parcels, "count": len(user_parcels)}), 200
 
 
@@ -88,3 +96,5 @@ def is_valid_user_request(newuser):
         return True
     else:
         return False
+
+

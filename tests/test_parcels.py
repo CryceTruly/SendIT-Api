@@ -1,9 +1,8 @@
-from app.endpoints import app
+from app import app
 import unittest
 import json
 import datetime
 from app.models import Parcel
-from app.endpoints import app
 from tests import test_base
 
 
@@ -60,7 +59,7 @@ class TestsParcel(unittest.TestCase):
             "api/v1/parcels",
             data=json.dumps(expectedreq),
             content_type="application/json")
-        self.assertEqual(response.status_code,201)
+        self.assertEqual(response.status_code, 201)
 
     def test_cannot_create_parcel_that_has_no_owner(self):
         """
@@ -81,9 +80,14 @@ class TestsParcel(unittest.TestCase):
             "api/v1/parcels",
             data=json.dumps(expectedreq),
             content_type="application/json")
-
         # we should get this on successful creation
         self.assertEqual(response.status_code, 400)
+
+    def test_checkcangetparcel_request_orders(self):
+        response=self.client.get("api/v1/parcels")
+        # we should get an ok on successful creation
+        self.assertEqual(response.status_code, 200)
+    
         
 
     if __name__ == "__main__":

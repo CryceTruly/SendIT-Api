@@ -1,18 +1,16 @@
-from flask import Flask, jsonify, request, Response, json
+from flask import Flask, jsonify, request, Response, json, Blueprint
+
 import datetime
-app = Flask(__name__)
-
-"""---------------------------PARCEL OPERATIONS-----------------------------"""
-
+ap = Blueprint('endpoint', __name__)
 
 # GET parcels
-@app.route('/api/v1/parcels')
+@ap.route('/api/v1/parcels')
 def get_parcels():
     return jsonify({'parcels': parcels}), 200
 
 
 # GET parcels/id
-@app.route('/api/v1/parcels/<int:id>')
+@ap.route('/api/v1/parcels/<int:id>')
 def get_a_parcel(id):
     theparcel = []
     for parcel in parcels:
@@ -20,11 +18,11 @@ def get_a_parcel(id):
             theparcel.append(parcel)
     if len(theparcel) == 0:
         return jsonify({"msg": "parcel request not found"}), 404
-    return jsonify(theparcel[0])
+    return jsonify(theparcel[0]),200
 
 
 # POST /parcels
-@app.route('/api/v1/parcels', methods=['POST'])
+@ap.route('/api/v1/parcels', methods=['POST'])
 def add_parcel():
     request_data = request.get_json()
     if is_valid_request(request_data):
@@ -58,7 +56,7 @@ def add_parcel():
 
 # PUT PUT /parcels/<parcelId>/cancel
 # CANCELS A SPECIFIC RESOURCE BASING ON THE PROVIDED IDENTIFIER
-@app.route('/api/v1/parcels/<int:id>/cancel', methods=['PUT'])
+@ap.route('/api/v1/parcels/<int:id>/cancel', methods=['PUT'])
 def cancel_parcel_request(id):
     cancelled_parcel = {}
     for parcel in parcels:
@@ -93,20 +91,15 @@ def is_valid_request(newparcel):
         return True
     else:
         return False
-parcels = [
-    {
-        'id': 2,
-        'pickup_address': 'Kampala Kikoni Makerere 13',
-        'destination_address': 'Mabarara Kikoni Home 13',
-        'comment_description': 'My parcels contain a laptop,please deliver',
-        'status': 'In Transit',
-        'current_location': 'Mabarara Kikoni Home 13',
-        'created': datetime.datetime.now(),
-        'user_id': 33,
-        'recipient_address': 'Julie Muli',
-        'recipient_phone': '0767876666',
-        'recipient_email': 'recipient@email.com'
-    }
-]
 
-"""---------------------------------------END OF PARCEL OPERATIONS------------------------------------------------------------------------"""
+
+def user_should_cancel(item,user_id):
+    #TODO a user that created the request should be the only one that can cancel it
+    #TODO check if the item status is not delivered
+    for p in parcels:
+        if p['user_id']==user_id:
+            return True
+    return False
+
+
+parcels =[]

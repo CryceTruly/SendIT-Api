@@ -1,9 +1,8 @@
 import unittest
 import os
 import coverage
-
+from app import app
 from flask_script import Manager
-from app.endpoints import app
 
 manager = Manager(app)
 
