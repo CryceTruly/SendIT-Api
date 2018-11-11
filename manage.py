@@ -29,6 +29,8 @@ def cov():
     cov.stop()
     cov.save()
     print('Coverage Summary:')
+    cov.report()
+    cov.erase()
 
 
 if __name__ == '__main__':
