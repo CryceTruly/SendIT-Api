@@ -136,9 +136,36 @@ class TestsUsers(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(response.status_code, 401)
 
-    def test_get_user_parcels(self):
+    def test_cannot_get_user_parcels(self):
         """
-        checks if a user can get their own parcel request orders
+        checks if a user that doesnt exist can not get parcel request orders
+        """
+        response = self.client.get(
+            "api/v1/users/5999/parcels",
+            content_type="application/json")
+        # we should get an ok
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_user_parcels(self):
+        '''
+        creates a user then attempts to get their items
+        :param self:
+        :return:
+        '''
+        expecteduser_obj = {
+            "fullname": "John terry",
+            "username": "jdoe",
+            "phone_number": "0756544544",
+            "email": "email000000@test.com",
+            "password": "passwod="
+
+        }
+        self.client.post(
+            "api/v1/users",
+            data=json.dumps(expecteduser_obj),
+            content_type="application/json")
+        """
+        checks if a user that doesnt exist can not get parcel request orders
         """
         response = self.client.get(
             "api/v1/users/1/parcels",
@@ -147,8 +174,11 @@ class TestsUsers(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_is_valid_email(self):
+        '''
+        tests function to validate emails
+        :return:
+        '''
         self.assertEqual(is_valid("crycetruly@gmail.com"), True)
         self.assertEqual(is_valid("cryceemail.com"), False)
         self.assertEqual(is_valid("ema@.com"), False)
         self.assertEqual(is_valid("myemail@mycompany.com"), True)
-
