@@ -1,7 +1,7 @@
 from app import app
 import unittest
 import json
-from app.users import  is_valid
+from app.users import is_valid
 
 
 class TestsUsers(unittest.TestCase):
@@ -182,3 +182,16 @@ class TestsUsers(unittest.TestCase):
         self.assertEqual(is_valid("cryceemail.com"), False)
         self.assertEqual(is_valid("ema@.com"), False)
         self.assertEqual(is_valid("myemail@mycompany.com"), True)
+
+    def test_get_a_no_users_message(self):
+        '''
+        tests if a user gets a readable no users message when users are not there
+        :return:
+        '''
+        response = self.client.get('api/v1/users', content_type='application/json')
+        data = json.loads(response.data.decode())
+        count = data['count']
+        if count == 0:
+            self.assertEqual(data['msg'], 'No users yet')
+        self.assertEqual(response.status, '200 OK'
+                         )
