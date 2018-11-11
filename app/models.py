@@ -21,12 +21,14 @@ class Parcel():
 
     def __str__(self):
         return "id:{} pickup_address:{} destination_address:{}  ".format(
-                self.id, self.pickup_address, self.destination_address)
+            self.id, self.pickup_address, self.destination_address)
+
     def __repr__(self):
         return "id:{} pickup_address:{} destination_address:{}  ".format(
             self.id, self.pickup_address, self.destination_address)
-parcel = Parcel(1, 'startadd', 'endadd', 'myc comment', 'delivered', 'dest addree', 'now', 1, 'recipt add',
-                        '075633333333'
-                        , 'testuser@gmail.com')
-print(parcel)
 
+
+parcel = Parcel(1, 'startadd', 'endadd', 'myc comment', 'delivered', 'dest addree', 'now', 1, 'recipt add',
+                '075633333333'
+                , 'testuser@gmail.com')
+print(parcel)

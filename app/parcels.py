@@ -11,7 +11,9 @@ def get_parcels():
     '''
     returns a list of all requests
     '''
-    return jsonify({'parcels': parcels}), 200
+    if len(parcels) == 0:
+        return jsonify({'msg': 'No parcels yet'}), 200
+    return jsonify({'parcels': parcels, 'count': len(parcels)}), 200
 
 
 # GET parcels/id
@@ -35,6 +37,9 @@ def add_parcel():
     '''
     creates a new parcel
     '''
+
+    if not request.content_type == 'application/json':
+        return jsonify({"failed": 'Content-type must be application/json'}), 401
     request_data = request.get_json()
     if is_valid_request(request_data):
         parcel = {
@@ -90,7 +95,7 @@ def cancel_parcel_request(id):
             }
             parcel.update(cancelled_parcel)
     if len(cancelled_parcel) == 0:
-        return jsonify({"msg": "parcel request was does not exist"}), 404
+        return jsonify({"msg": "parcel request does not exist"}), 404
 
     return jsonify({"msg": "parcel request was cancelled successfully", "status": cancelled_parcel.get("status"),
                     "id": cancelled_parcel.get("id")}), 200
@@ -104,7 +109,6 @@ def is_valid_request(newparcel):
         return True
     else:
         return False
-
 
 
 parcels = []
