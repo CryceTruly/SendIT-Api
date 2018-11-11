@@ -20,7 +20,8 @@ def cov():
     """Runs the unit tests with coverage."""
     cov = coverage.coverage(
         branch=True,
-        include='app/*'
+        include='app/*',
+
     )
     cov.start()
     tests = unittest.TestLoader().discover('tests')
