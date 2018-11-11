@@ -23,6 +23,8 @@ users = []
 @user_print.route('/api/v1/users', methods=['POST'])
 def create_user():
     """creates new user"""
+    if not request.content_type == 'application/json':
+        return jsonify({"failed": 'Content-type must be application/json'}), 401
     request_data = request.get_json()
     if not is_valid_user_request(request_data):
         return jsonify({"success": False, "msg": "Bad request"}), 400
