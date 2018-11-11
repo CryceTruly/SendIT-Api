@@ -29,11 +29,6 @@ def cov():
     cov.stop()
     cov.save()
     print('Coverage Summary:')
-    cov.report()
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    covdir = os.path.join(basedir, 'coverage')
-    cov.html_report(directory=covdir)
-    cov.erase()
 
 
 if __name__ == '__main__':

@@ -9,6 +9,7 @@ class TestsParcel(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client(self)
 
+
     def create_parcel(self):
         self.new_parcel = Parcel(
             id=1,
@@ -23,7 +24,15 @@ class TestsParcel(unittest.TestCase):
             recipient_phone='0767876666',
             recipient_email='recipient@email.com'
         )
-
+    def test_welcome(self):
+        '''
+        checks if the app is up and running
+        '''
+        response = self.client.get(
+            "api/v1/parcels",
+            content_type="application/json")
+        # we should get this on successful creation
+        self.assertEqual(response.status_code, 200)
     def test_create_parcel_with_only_pickup_address(self):
         """
         checks if a parcel request cant be created without any data

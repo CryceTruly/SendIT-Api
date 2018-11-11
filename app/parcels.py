@@ -5,6 +5,7 @@ import datetime
 ap = Blueprint('endpoint', __name__)
 parcels = []
 
+ 
 # GET parcels
 @ap.route('/api/v1/parcels')
 def get_parcels():
@@ -62,11 +63,8 @@ def add_parcel():
         response.headers['Location'] = "parcels/" + str(parcel['id'])
         return response
     else:
-        bad_object = {
-            "error": "Invalid Parcel delivery order object"
-        }
-        response = Response(json.dumps(bad_object),
-                            status=400, mimetype="application/json")
+        response = Response(json.dumps({"error": "Invalid Parcel delivery order object" }), 
+        status=400, mimetype="application/json")
         return response
 
 
@@ -76,7 +74,7 @@ def cancel_parcel_request(id):
     '''
     cancels a specific request given its identifier
     '''
-    if order_delivered(id):
+    if is_order_delivered(id):
         return jsonify({"msg": "Not allowed parcel request has already been delivered"}), 403
     for parcel in parcels:
         if parcel['id'] == id:
@@ -112,7 +110,7 @@ def is_valid_request(newparcel):
         return False
 
 
-def order_delivered(id):
+def is_order_delivered(id):
     '''
     checks that we cannot cancel an already delivered order
     '''
