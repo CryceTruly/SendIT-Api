@@ -1,9 +1,8 @@
 import unittest
 import os
 import coverage
-
+from app import app
 from flask_script import Manager
-from app.endpoints import app
 
 manager = Manager(app)
 
@@ -21,7 +20,8 @@ def cov():
     """Runs the unit tests with coverage."""
     cov = coverage.coverage(
         branch=True,
-        include='app/*'
+        include='app/*',
+
     )
     cov.start()
     tests = unittest.TestLoader().discover('tests')
@@ -30,9 +30,6 @@ def cov():
     cov.save()
     print('Coverage Summary:')
     cov.report()
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    covdir = os.path.join(basedir, 'coverage')
-    cov.html_report(directory=covdir)
     cov.erase()
 
 
