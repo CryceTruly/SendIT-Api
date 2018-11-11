@@ -1,9 +1,9 @@
-from flask import Flask, jsonify, request, Response, json, Blueprint
+from flask import Flask, jsonify, request, Response, json, Blueprint,sessions
 
 import datetime
 
 ap = Blueprint('endpoint', __name__)
-
+parcels = []
 
 # GET parcels
 @ap.route('/api/v1/parcels')
@@ -35,7 +35,7 @@ def get_a_parcel(id):
 @ap.route('/api/v1/parcels', methods=['POST'])
 def add_parcel():
     '''
-    creates a new parcel
+    creates a new parcel order
     '''
 
     if not request.content_type == 'application/json':
@@ -70,13 +70,14 @@ def add_parcel():
         return response
 
 
-# PUT PUT /parcels/<parcelId>/cancel
+# PUT /parcels/<parcelId>/cancel
 @ap.route('/api/v1/parcels/<int:id>/cancel', methods=['PUT'])
 def cancel_parcel_request(id):
     '''
     cancels a specific request given its identifier
     '''
-    cancelled_parcel = {}
+    if order_delivered(id):
+        return jsonify({"msg": "Not allowed parcel request has already been delivered"}), 403
     for parcel in parcels:
         if parcel['id'] == id:
             cancelled_parcel = {
@@ -111,4 +112,12 @@ def is_valid_request(newparcel):
         return False
 
 
-parcels = []
+def order_delivered(id):
+    '''
+    checks that we cannot cancel an already delivered order
+    '''
+    for parcel in parcels:
+        if parcel['id']==id:
+            if parcel['status']=='delivered':
+                return True
+    return False

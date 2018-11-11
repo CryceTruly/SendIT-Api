@@ -43,9 +43,12 @@ py.test
 
 | URL Endpoint | HTTP Methods | Summary |
 | -------- | ------------- | --------- |
-| `/parcels` | `POST`  | Creates a new Parcel delivery order|
-| `/parcels/<int:id>` | `GET` | Retrieves a specific parcel delivery order given its identifier|
-| `/parcels/<int:id>/cancel` | `PUT` | Cancels a specific parcel delivery order given its identifier |
-| `/users` | `GET` | Retrieve all users |
-| `/users` | `POST` |  Creates a new User |
-| `/users/<int:id>/parcels` | `GET` | Retrieves parcel orders for a specific user |
+| `api/v1/parcels` | `POST`  | Creates a new Parcel delivery order|
+| `api/v1/parcels/<int:id>` | `GET` | Retrieves a specific parcel delivery order given its identifier|
+| `api/v1/parcels/<int:id>/cancel` | `PUT` | Cancels a specific parcel delivery order given its identifier |
+| `api/v1/users` | `GET` | Retrieve all users |
+| `api/v1/users` | `POST` |  Creates a new User |
+| `api/v1/users/<int:id>/parcels` | `GET` | Retrieves parcel orders for a specific user |
+
+## Deployement
+coming soon

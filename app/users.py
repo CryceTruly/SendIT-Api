@@ -4,10 +4,11 @@ import datetime
 import re
 
 user_print = Blueprint('user_print', __name__)
-
+users = []
 
 @user_print.route('/api/v1/users', methods=['GET'])
 def getall_users():
+    
     ''''
     returns a list of all users
     '''
@@ -17,7 +18,7 @@ def getall_users():
     return jsonify({"users": users, "count": len(users)}), 200
 
 
-users = []
+
 
 
 @user_print.route('/api/v1/users', methods=['POST'])
