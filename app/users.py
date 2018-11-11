@@ -62,6 +62,9 @@ def get_user_parcels(id):
         if parcel['user_id'] == id:
             user_parcels.append(parcel)
 
+    if len(user_parcels) == 0:
+        return jsonify({"msg": 'No parcel requests yet', "count": len(user_parcels)}), 404
+
     return jsonify({"user_parcel_orders": user_parcels, "count": len(user_parcels)}), 200
 
 
