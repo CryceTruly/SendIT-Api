@@ -51,5 +51,4 @@ py.test
 | `api/v1/users/<int:id>/parcels` | `GET` | Retrieves parcel orders for a specific user |
 
 ## Deployement
-coming soon
-[![https://senditappp.herokuapp.com/)] [![Heroku Deployement]
+[Heroku Deployement](https://senditappp.herokuapp.com)
