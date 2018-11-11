@@ -159,5 +159,33 @@ class TestsParcel(unittest.TestCase):
         count = data['count']
         if count == 0:
             self.assertEqual(data['msg'], 'No parcels')
-        self.assertEqual(response.status, '200 OK'
-                         )
+        self.assertEqual(response.status, '200 OK')
+
+   
+
+    def test_cant_cancel_adelivered_order(self):
+        """
+        checks if cannot cancel an order thats already delivered
+        """
+        expectedreq = {
+            'id': 1,
+            'pickup_address': 'Kampala Kikoni Makerere 13',
+            'destination_address': 'Mabarara Kikoni Home 13',
+            'comment_description': 'My parcels contain a laptop,please deliver',
+            'status': 'delivered',
+            'current_location': 'Mabarara Kikoni Home 13',
+            'created': "Sat, 10 Nov 2018 13:46:41 GMT",
+            'user_id': 1,
+            'recipient_address': 'Julie Muli',
+            'recipient_phone': '0767876666',
+            'recipient_email': 'recipient@email.com'
+        }
+        self.client.post(
+            "api/v1/parcels",
+            data=json.dumps(expectedreq),
+            content_type="application/json")
+        response = self.client.put(
+            "api/v1/parcels/1/cancel",
+            data='',
+            content_type="application/json")
+        self.assertEqual(response.status_code, 200)
