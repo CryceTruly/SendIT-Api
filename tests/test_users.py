@@ -193,5 +193,4 @@ class TestsUsers(unittest.TestCase):
         count = data['count']
         if count == 0:
             self.assertEqual(data['msg'], 'No users yet')
-        self.assertEqual(response.status, '200 OK'
-                         )
+        self.assertEqual(response.status, '200 OK')
