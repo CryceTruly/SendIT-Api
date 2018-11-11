@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request, Response, json, Blueprint
 
 import datetime
+
 ap = Blueprint('endpoint', __name__)
+
 
 # GET parcels
 @ap.route('/api/v1/parcels')
@@ -24,7 +26,7 @@ def get_a_parcel(id):
             theparcel.append(parcel)
     if len(theparcel) == 0:
         return jsonify({"msg": "parcel delivery request not found"}), 404
-    return jsonify(theparcel[0]),200
+    return jsonify(theparcel[0]), 200
 
 
 # POST /parcels
@@ -50,10 +52,10 @@ def add_parcel():
         }
         parcels.append(parcel)
         response = Response(response=json.dumps({
-            'msg': "Parcel delivery successfully created",'request_id':parcel.get('id')}),
+            'msg': "Parcel delivery successfully created", 'request_id': parcel.get('id')}),
             status=201, mimetype="application/json")
         response.headers['Location'] = "parcels/" + str(parcel['id'])
-        return  response
+        return response
     else:
         bad_object = {
             "error": "Invalid Parcel delivery order object"
@@ -95,22 +97,14 @@ def cancel_parcel_request(id):
 
 
 def is_valid_request(newparcel):
-    if "destination_address" in newparcel and "pickup_address" in newparcel\
+    if "destination_address" in newparcel and "pickup_address" in newparcel \
             and "comment_description" in newparcel and "created" in newparcel and \
             "user_id" in newparcel and "recipient_address" in newparcel and "recipient_phone" in newparcel and \
-             "recipient_email" in newparcel and "status" in newparcel:
+            "recipient_email" in newparcel and "status" in newparcel:
         return True
     else:
         return False
 
 
-def user_should_cancel(item,user_id):
-    #TODO a user that created the request should be the only one that can cancel it
-    #TODO check if the item status is not delivered
-    for p in parcels:
-        if p['user_id']==user_id:
-            return True
-    return False
 
-
-parcels =[]
+parcels = []
