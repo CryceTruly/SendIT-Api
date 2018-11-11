@@ -84,11 +84,64 @@ class TestsParcel(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_checkcangetparcel_request_orders(self):
-        response=self.client.get("api/v1/parcels")
+        response = self.client.get("api/v1/parcels")
         # we should get an ok on successful creation
         self.assertEqual(response.status_code, 200)
-    
-        
 
-    if __name__ == "__main__":
-        unittest.main()
+    def test_can_get_parcel(self):
+        """
+        checks if a single parcel can be returned given its id
+        """
+        expectedreq = {
+            'id': 1,
+            'pickup_address': 'Kampala Kikoni Makerere 13',
+            'destination_address': 'Mabarara Kikoni Home 13',
+            'comment_description': 'My parcels contain a laptop,please deliver',
+            'status': 'In Transit',
+            'current_location': 'Mabarara Kikoni Home 13',
+            'created': "Sat, 10 Nov 2018 13:46:41 GMT",
+            'user_id': 1,
+            'recipient_address': 'Julie Muli',
+            'recipient_phone': '0767876666',
+            'recipient_email': 'recipient@email.com'
+        }
+        self.client.post(
+            "api/v1/parcels",
+            data=json.dumps(expectedreq),
+            content_type="application/json")
+        response = self.client.get(
+            "api/v1/parcels/1",
+            data='',
+            content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+    def test_cant_get_inexistent_parcel(self):
+        response = self.client.get(
+            "api/v1/parcels/b",
+            data='',
+            content_type="application/json")
+        self.assertEqual(response.status_code, 404)
+    def test_cant_cancel_unavailable_parcel_delivery_order(self):
+        expectedreq = {
+            'id': 1,
+            'pickup_address': 'Kampala Kikoni Makerere 13',
+            'destination_address': 'Mabarara Kikoni Home 13',
+            'comment_description': 'My parcels contain a laptop,please deliver',
+            'status': 'In Transit',
+            'current_location': 'Mabarara Kikoni Home 13',
+            'created': "Sat, 10 Nov 2018 13:46:41 GMT",
+            'user_id': 1,
+            'recipient_address': 'Julie Muli',
+            'recipient_phone': '0767876666',
+            'recipient_email': 'recipient@email.com'
+        }
+        self.client.post(
+            "api/v1/parcels",
+            data=json.dumps(expectedreq),
+            content_type="application/json")
+        res= self.client.put( "api/v1/parcels/1/cancel",
+            data='',
+            content_type="application/json")
+
+        self.assertEqual(res.status_code, 200)
+

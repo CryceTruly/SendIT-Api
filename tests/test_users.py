@@ -1,12 +1,10 @@
 from app import app
 import unittest
 import json
-import datetime
-from app.models import Parcel
-from tests import test_base
+from app.users import  is_valid
 
 
-class TestsParcel(unittest.TestCase):
+class TestsUsers(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client(self)
 
@@ -18,7 +16,7 @@ class TestsParcel(unittest.TestCase):
             "fullname": "John terry",
             "username": "jdoe",
             "phone_number": "0756544544",
-            "email": "email@test.com",
+            "email": "email000000@test.com",
             "password": "passwod="
 
         }
@@ -27,6 +25,7 @@ class TestsParcel(unittest.TestCase):
             data=json.dumps(expecteduser_obj),
             content_type="application/json")
         data = json.loads(response.data.decode())
+
         self.assertEqual(
             data['success'], True)
         self.assertEqual(response.status_code, 201)
@@ -35,39 +34,19 @@ class TestsParcel(unittest.TestCase):
         """
         checks if cannot create a user who has no email
         """
-        expecteduser_obj = {
-            "fullname": "John terry",
-            "username": "jdoe",
-            "phone_number": "0756544544",
-            "password": "passwod="
-
-        }
-        response = self.client.post(
-            "api/v1/users",
-            data=json.dumps(expecteduser_obj),
-            content_type="application/json")
-        # we should get this when a user has no email
-        self.assertEqual(response.status_code, 400)
-        data = json.loads(response.data.decode())
-        self.assertEqual(data['success'], False)
-        self.assertEqual(data['msg'], "Bad request")
-
-    def test_user_cannot_have_someones_email(self):
         users = []
         expecteduser_obj = {
             "fullname": "John terry",
-            "username": "jdoe",
+            "username": "je",
             "phone_number": "0756544544",
-            "email": "email@test.com",
             "password": "passwod="
 
         }
         users.append(expecteduser_obj)
         user_obj = {
             "fullname": "John terry",
-            "username": "j90e",
+            "username": "je",
             "phone_number": "0756544544",
-            "email": "email@test.com",
             "password": "passwod="
 
         }
@@ -76,9 +55,9 @@ class TestsParcel(unittest.TestCase):
             data=json.dumps(user_obj),
             content_type="application/json")
         data = json.loads(response.data.decode())
-        self.assertEqual(data['msg'], 'Email is already taken')
+        self.assertEqual(data['msg'], 'Bad request')
         self.assertEqual(data['success'], False)
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 400)
 
     def test_user_cannot_have_someones_user_name(self):
         users = []
@@ -103,41 +82,73 @@ class TestsParcel(unittest.TestCase):
             "api/v1/users",
             data=json.dumps(user_obj),
             content_type="application/json")
-        data = json.loads(response.data.decode())
-        self.assertEqual(data['msg'], 'Username is already taken')
-        self.assertEqual(data['success'], False)
+        data2 = json.loads(response.data.decode())
+        self.assertEqual(data2['msg'], 'Username is already taken')
+        self.assertEqual(data2['success'], False)
         self.assertEqual(response.status_code, 401)
 
-
-    def test_user_cannot_have_an_invalid_email(self):
-      """
-      tests if user supplies a valid email
-      """
-      user_obj = {
-             "fullname":"John terry",
-            "username":"jdoe",
+    def test_user_cannot_have_someone_else_email_address(self):
+        usersList = []
+        expecteduser_obj = {
+            "fullname": "John terry",
+            "username": "fredy",
             "phone_number": "0756544544",
-            "email":"est.com",
-            "password":"passwod="
+            "email": "fredy@test.com",
+            "password": "passwod="
 
         }
-      response = self.client.post(
+        usersList.append(expecteduser_obj)
+        user_obj2 = {
+            "fullname": "John terry",
+            "username": "jdoe",
+            "phone_number": "0756544544",
+            "email": "fredy@test.com",
+            "password": "yestpass"
+
+        }
+        response = self.client.post(
+            "api/v1/users",
+            data=json.dumps(user_obj2),
+            content_type="application/json")
+        data2 = json.loads(response.data.decode())
+        self.assertEqual(data2['msg'], 'Username is already taken')
+        self.assertEqual(data2['success'], False)
+        self.assertEqual(response.status_code, 401)
+
+    def test_user_cannot_have_an_invalid_email(self):
+        """
+        tests if user supplies a valid email
+        """
+        user_obj = {
+            "fullname": "John terry",
+            "username": "jdoe",
+            "phone_number": "0756544544",
+            "email": "est.com",
+            "password": "passwod="
+
+        }
+        response = self.client.post(
             "api/v1/users",
             data=json.dumps(user_obj),
             content_type="application/json")
-      data = json.loads(response.data.decode())
-      self.assertEqual(data['msg'],'Email is badly formatted')
-      self.assertEqual(data['success'],False)
-      self.assertEqual(response.status_code, 401)
-
-
+        data = json.loads(response.data.decode())
+        self.assertEqual(data['msg'], 'Email is badly formatted')
+        self.assertEqual(data['success'], False)
+        self.assertEqual(response.status_code, 401)
 
     def test_get_user_parcels(self):
         """
         checks if a user can get their own parcel request orders
         """
         response = self.client.get(
-        "api/v1/users/1/parcels",
-        content_type="application/json")
+            "api/v1/users/1/parcels",
+            content_type="application/json")
         # we should get an ok
         self.assertEqual(response.status_code, 200)
+
+    def test_is_valid_email(self):
+        self.assertEqual(is_valid("crycetruly@gmail.com"), True)
+        self.assertEqual(is_valid("cryceemail.com"), False)
+        self.assertEqual(is_valid("ema@.com"), False)
+        self.assertEqual(is_valid("myemail@mycompany.com"), True)
+

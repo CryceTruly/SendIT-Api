@@ -6,24 +6,33 @@ ap = Blueprint('endpoint', __name__)
 # GET parcels
 @ap.route('/api/v1/parcels')
 def get_parcels():
+    '''
+    returns a list of all requests
+    '''
     return jsonify({'parcels': parcels}), 200
 
 
 # GET parcels/id
 @ap.route('/api/v1/parcels/<int:id>')
 def get_a_parcel(id):
+    '''
+    return order request details for a specific order
+    '''
     theparcel = []
     for parcel in parcels:
         if parcel['id'] == id:
             theparcel.append(parcel)
     if len(theparcel) == 0:
-        return jsonify({"msg": "parcel request not found"}), 404
+        return jsonify({"msg": "parcel delivery request not found"}), 404
     return jsonify(theparcel[0]),200
 
 
 # POST /parcels
 @ap.route('/api/v1/parcels', methods=['POST'])
 def add_parcel():
+    '''
+    creates a new parcel
+    '''
     request_data = request.get_json()
     if is_valid_request(request_data):
         parcel = {
@@ -55,9 +64,11 @@ def add_parcel():
 
 
 # PUT PUT /parcels/<parcelId>/cancel
-# CANCELS A SPECIFIC RESOURCE BASING ON THE PROVIDED IDENTIFIER
 @ap.route('/api/v1/parcels/<int:id>/cancel', methods=['PUT'])
 def cancel_parcel_request(id):
+    '''
+    cancels a specific request given its identifier
+    '''
     cancelled_parcel = {}
     for parcel in parcels:
         if parcel['id'] == id:
@@ -77,7 +88,7 @@ def cancel_parcel_request(id):
             }
             parcel.update(cancelled_parcel)
     if len(cancelled_parcel) == 0:
-        return jsonify({"msg": "parcel request was dooes not exist"}), 404
+        return jsonify({"msg": "parcel request was does not exist"}), 404
 
     return jsonify({"msg": "parcel request was cancelled successfully", "status": cancelled_parcel.get("status"),
                     "id": cancelled_parcel.get("id")}), 200
