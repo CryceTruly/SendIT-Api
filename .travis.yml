@@ -11,6 +11,7 @@ script:
   - python manage.py cov
   - coverage run --source=. -m unittest discover
 
+
 sudo: required
 
 after_success: 
