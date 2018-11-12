@@ -9,7 +9,7 @@ install:
 script:
   - python manage.py test
   - python manage.py cov
-  - coverage report
+  -  coverage run --source=. -m unittest discover
 
 sudo: required
 
