@@ -5,6 +5,9 @@ import datetime
 ap = Blueprint('endpoint', __name__)
 parcels = []
 
+@ap.route("/")
+def welcome():
+    return jsonify({"message":"Welcome to the sendit api,v1"})
  
 # GET parcels
 @ap.route('/api/v1/parcels')
