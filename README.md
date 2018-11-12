@@ -1,5 +1,7 @@
 # SendIT-Api
 [![Build Status](https://travis-ci.org/CryceTruly/SendIT-Api.svg?branch=mainapp)](https://travis-ci.org/CryceTruly/SendIT-Api) [![Coverage Status](https://coveralls.io/repos/github/CryceTruly/SendIT-Api/badge.svg?branch=master)](https://coveralls.io/github/CryceTruly/SendIT-Api?branch=master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/f84f7744ada502f4799c/maintainability)](https://codeclimate.com/github/CryceTruly/SendIT-Api/maintainability)
+
 A rest api for the SendIT application
 
 ## Installation
