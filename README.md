@@ -51,4 +51,4 @@ py.test
 | `api/v1/users/<int:id>/parcels` | `GET` | Retrieves parcel orders for a specific user |
 
 ## Deployement
-coming soon
+
