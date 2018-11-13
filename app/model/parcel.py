@@ -1,6 +1,6 @@
 import datetime
 import json
-import request
+import requests
 from flask import Response
 import requests
 
@@ -166,7 +166,6 @@ class ParcelList:
         r = requests.get('https://maps.googleapis.com/maps/api/geocode/json?address='+pickupadd+'&key='+self.trulysKey)
         print(r)
         
-    @staticmethod
     def update_order(self,current_location,status,id):
         '''
         updates the status and or the current location
@@ -193,6 +192,39 @@ class ParcelList:
                     'destination_lat_lng': self.getdestinationlatlng(parcel['destination_address']),
                     'price': self.get_charge(parcel['weight'],
                                              self.get_distance(parcel['pickup_address'], parcel['destination_address']))
+
+                }
+                parcel.update(parceltoupdate)
+
+        return parceltoupdate
+
+
+    def changedestination(self,newdest,id):
+        '''
+        allows user to change destination
+
+        '''
+        parceltoupdate={}
+        for parcel in self.parcels:
+            if parcel['id'] == id:
+                parceltoupdate = {
+                    'id': parcel['id'],
+                    'pickup_address': parcel['pickup_address'],
+                    'destination_address':newdest,
+                    'comment_description': parcel['comment_description'],
+                    'status': parcel['status'],
+                    'current_location':parcel['current_location'],
+                    'created': parcel['created'],
+                    'updated':datetime.datetime.now(),
+                    'user_id': parcel['user_id'],
+                    'recipient_address': parcel['recipient_address'],
+                    'recipient_phone': parcel['recipient_phone'],
+                    'recipient_email': parcel['recipient_email'],
+                    'weight': parcel['weight'],
+                    'distance': self.get_distance(parcel['pickup_address'], newdest),
+                    'pick_up_lat_lng': parcel['pick_up_lat_lng'],
+                    'destination_lat_lng': self.getdestinationlatlng(newdest),
+                    'price': parcel['price']
 
                 }
                 parcel.update(parceltoupdate)

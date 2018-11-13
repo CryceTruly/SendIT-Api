@@ -69,9 +69,32 @@ def cancel_parcel_request(id):
 @ap.route('/api/v1/parcels/<int:id>/update',methods=['PUT'])
 def update_order_request(id):
     request_data=request.get_json()
-    PARCEL.update_order(request_data['current_location'],request_data['status'],id)
-    return jsonify(request_data)
+    if is_should_update(request_data['current_location'],request_data['status']):
+        PARCEL.update_order(request_data['current_location'],request_data['status'],id)
+        return jsonify({'msg':'updated successfully'}),200
+    else:
+        return jsonify({'msg':'bad request object, params missing'}),400
+
+@ap.route('/api/v1/parcels/<int:id>/changedest',methods=['PUT'])
+def changedestination(id):
+    rdata=request.get_json()
+    newdest=rdata['destination']
+    if not PARCEL.is_order_delivered(id):
+        PARCEL.changedestination(newdest,id)
+        return jsonify({'msg':'updated successfully'}),200
+    else:
+        return jsonify({'msg':'order already delivered cant update'})
 
 
 def not_validresponse():
+    '''
+    helper to refactor similar response
+    '''
     return jsonify({"error": 'Bad Request object,expected data is missing'}), 400
+def is_should_update(loc,status):
+    if len(status)>2:
+        if len(loc)>3:
+            return True
+    return False
+
+
