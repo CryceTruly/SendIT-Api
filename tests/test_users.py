@@ -1,7 +1,7 @@
-from app import app
-import unittest
 import json
-from app.users import is_valid
+import unittest
+
+from app import app
 
 
 class TestsUsers(unittest.TestCase):
@@ -27,7 +27,7 @@ class TestsUsers(unittest.TestCase):
         data = json.loads(response.data.decode())
 
         self.assertEqual(
-            data['success'], True)
+            data['msg'], "user created")
         self.assertEqual(response.status_code, 201)
 
     def test_cannot_create_a_user_without_email(self):
@@ -85,7 +85,7 @@ class TestsUsers(unittest.TestCase):
         data2 = json.loads(response.data.decode())
         self.assertEqual(data2['msg'], 'Username is already taken')
         self.assertEqual(data2['success'], False)
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 409)
 
     def test_user_cannot_have_someone_else_email_address(self):
         usersList = []
@@ -113,7 +113,7 @@ class TestsUsers(unittest.TestCase):
         data2 = json.loads(response.data.decode())
         self.assertEqual(data2['msg'], 'Username is already taken')
         self.assertEqual(data2['success'], False)
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 409)
 
     def test_user_cannot_have_an_invalid_email(self):
         """
@@ -134,7 +134,7 @@ class TestsUsers(unittest.TestCase):
         data = json.loads(response.data.decode())
         self.assertEqual(data['msg'], 'Email is badly formatted')
         self.assertEqual(data['success'], False)
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 400)
 
     def test_cannot_get_user_parcels(self):
         """
@@ -172,16 +172,6 @@ class TestsUsers(unittest.TestCase):
             content_type="application/json")
         # we should get an ok
         self.assertEqual(response.status_code, 200)
-
-    def test_is_valid_email(self):
-        '''
-        tests function to validate emails
-        :return:
-        '''
-        self.assertEqual(is_valid("crycetruly@gmail.com"), True)
-        self.assertEqual(is_valid("cryceemail.com"), False)
-        self.assertEqual(is_valid("ema@.com"), False)
-        self.assertEqual(is_valid("myemail@mycompany.com"), True)
 
     def test_get_a_no_users_message(self):
         '''
