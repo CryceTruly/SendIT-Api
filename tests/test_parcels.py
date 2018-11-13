@@ -131,7 +131,8 @@ class TestsParcel(unittest.TestCase):
         tests if a user gets a readable no users message when users are not there
         :return:
         '''
-        response = self.client.get('api/v1/parcels', content_type='application/json')
+        response = self.client.get(
+            'api/v1/parcels', content_type='application/json')
         data = json.loads(response.data.decode())
         count = data['count']
         if count == 0:
@@ -167,3 +168,64 @@ class TestsParcel(unittest.TestCase):
             data='',
             content_type="application/json")
         self.assertEqual(response.status_code, 403)
+
+    def test_can_update_location(self):
+        '''
+        test if user can change dest
+        '''
+        req = {
+            'id': 1,
+            'pickup_address': 'Kampala Kikoni Makerere 13',
+            'destination_address': 'Mabarara Kikoni Home 13',
+            'comment_description': 'My parcels contain a laptop,please deliver',
+            'status': 'delivered',
+            'current_location': 'Mabarara Kikoni Home 13',
+            'created': "Sat, 10 Nov 2018 13:46:41 GMT",
+            'user_id': 1,
+            'recipient_address': 'Julie Muli',
+            'recipient_phone': '0767876666',
+            'recipient_email': 'recipient@email.com',
+            'recipient_name': 'recipient',
+            'weight': 21
+
+        }
+        req2 = {
+            'id': 1,
+            'pickup_address': 'Kampala Kikoni Makerere 13',
+            'destination_address': 'Mubende Kikoni Home 13',
+            'comment_description': 'My parcels contain a laptop,please deliver',
+            'status': 'delivered',
+            'current_location': 'Mabarara Kikoni Home 13',
+            'created': "Sat, 10 Nov 2018 13:46:41 GMT",
+            'user_id': 1,
+            'recipient_address': 'Julie Muli',
+            'recipient_phone': '0767876666',
+            'recipient_email': 'recipient@email.com',
+            'recipient_name': 'recipient',
+            'weight': 21
+
+        }
+        self.client.post(
+            "api/v1/parcels",
+            data=json.dumps(req),
+            content_type="application/json")
+        response = self.client.put(
+            "api/v1/parcels/1/update",
+            data=json.dumps(req2),
+            content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+    def test_can_change_dest(self):
+       
+
+        req2 = {
+                'id': 1,
+                'destination': 'Mubende Kikoni Home 13',
+                'status': 'delivered',
+               
+            }
+        response = self.client.put(
+            "api/v1/parcels/1/changedest",
+            data=json.dumps(req2),
+            content_type="application/json")
+        self.assertEqual(response.status_code, 200)
