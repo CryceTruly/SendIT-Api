@@ -1,7 +1,8 @@
 import datetime
 import json
-
+import request
 from flask import Response
+import requests
 
 
 class ParcelList:
@@ -12,6 +13,7 @@ class ParcelList:
     def __init__(self):
         self.parcels = []
         self.base_price = 5
+        self.trulysKey='AIzaSyDCMKCmQrlKbMAI8BfpNUkDKguW8rl6Yz8'
 
     def is_parcel_exist(self, id):
         """check if parcel not exist in the parcel list """
@@ -160,3 +162,39 @@ class ParcelList:
 
     def getdestinationlatlng(self, add):
         return 33
+    def formatted_pick_address(self,pickupadd):
+        r = requests.get('https://maps.googleapis.com/maps/api/geocode/json?address='+pickupadd+'&key='+self.trulysKey)
+        print(r)
+        
+    @staticmethod
+    def update_order(self,current_location,status,id):
+        '''
+        updates the status and or the current location
+        '''
+        parceltoupdate={}
+        for parcel in self.parcels:
+            if parcel['id'] == id:
+                parceltoupdate = {
+                    'id': parcel['id'],
+                    'pickup_address': parcel['pickup_address'],
+                    'destination_address': parcel['destination_address'],
+                    'comment_description': parcel['comment_description'],
+                    'status': status,
+                    'current_location': current_location,
+                    'created': parcel['created'],
+                    'updated':datetime.datetime.now(),
+                    'user_id': parcel['user_id'],
+                    'recipient_address': parcel['recipient_address'],
+                    'recipient_phone': parcel['recipient_phone'],
+                    'recipient_email': parcel['recipient_email'],
+                    'weight': parcel['weight'],
+                    'distance': self.get_distance(parcel['pickup_address'], parcel['destination_address']),
+                    'pick_up_lat_lng': self.getpickuplatlng(parcel['pickup_address']),
+                    'destination_lat_lng': self.getdestinationlatlng(parcel['destination_address']),
+                    'price': self.get_charge(parcel['weight'],
+                                             self.get_distance(parcel['pickup_address'], parcel['destination_address']))
+
+                }
+                parcel.update(parceltoupdate)
+
+        return parceltoupdate

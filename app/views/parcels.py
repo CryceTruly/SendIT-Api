@@ -66,6 +66,12 @@ def cancel_parcel_request(id):
         {"msg": "parcel request was cancelled successfully", "status": PARCEL.cancel_parcel(id).get("status"),
          "id": PARCEL.cancel_parcel(id).get("id")}), 200
 
+@ap.route('/api/v1/parcels/<int:id>/update',methods=['PUT'])
+def update_order_request(id):
+    request_data=request.get_json()
+    PARCEL.update_order(request_data['current_location'],request_data['status'],id)
+    return jsonify(request_data)
+
 
 def not_validresponse():
     return jsonify({"error": 'Bad Request object,expected data is missing'}), 400
