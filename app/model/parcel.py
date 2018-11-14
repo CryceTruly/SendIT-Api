@@ -3,8 +3,7 @@ import json
 import requests
 from flask import Response
 import requests
-
-
+from flask_mail import Message
 class ParcelList:
     """
     data structures
@@ -22,25 +21,14 @@ class ParcelList:
                 return True
         return False
 
-    # def is_valid_parcel(self, parcel_data):
-    #     """ check whether parcel is a valid one """
-    #     details = parcel_data
-    #     dish = details['dish']
-    #     desc = details['description']
-    #     price = details['price']
-    #     if not isinstance(desc, str):
-    #         return "Description should be string format"
-    #     if not isinstance(dish, str):
-    #         return "Dish should be in string format"
-    #     if not isinstance(price, int):
-    #         return "price should be integer"
-    #     if dish.isspace() or desc.isspace():
-    #         return "parcel request contains spaces only"
-    #     if len(dish) == 0 or len(desc) == 0 or price == 0:
-    #         return "No field should be left empty"
-    #     self.parcel = parcel(id, dish.lower(), desc.lower(), price)
-    #     if not self.parcel:
-    #         return "invalid parcel"
+    def is_valid_parcel(self, parcel_data):
+        """ check whether parcel is a valid one """
+        details = parcel_data
+        comment_description = details['comment_description']
+        weight = details['weight']
+        recipient_email = details['recipient_email']
+        if not isinstance(comment_description, str):
+            return "Description should be string format"
 
     def add_parcel(self, parcel_data):
         '''
@@ -73,7 +61,7 @@ class ParcelList:
             }
             self.parcels.append(parcel)
             response = Response(response=json.dumps({
-                'msg': "Parcel delivery successfully created", 'request_id': parcel.get('id')}),
+                'msg': "Parcel delivery successfully created", 'orderid': parcel.get('id')}),
                 status=201, mimetype="application/json")
             response.headers['Location'] = "parcels/" + str(parcel['id'])
             return response
@@ -229,4 +217,6 @@ class ParcelList:
                 }
                 parcel.update(parceltoupdate)
 
+
         return parceltoupdate
+

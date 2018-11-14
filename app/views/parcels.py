@@ -1,8 +1,11 @@
 from flask import jsonify, request, Blueprint
 
+from flask_mail import  Mail,Message
 from app.model.parcel import ParcelList
 
+
 ap = Blueprint('endpoint', __name__)
+mail=Mail(ap)
 PARCEL = ParcelList()
 
 
@@ -69,16 +72,24 @@ def cancel_parcel_request(id):
 @ap.route('/api/v1/parcels/<int:id>/update',methods=['PUT'])
 def update_order_request(id):
     request_data=request.get_json()
-    if is_should_update(request_data['current_location'],request_data['status']):
+    if is_should_update(request_data):
         PARCEL.update_order(request_data['current_location'],request_data['status'],id)
+        sendemail('crycetruly@gmail.com',request_data)
         return jsonify({'msg':'updated successfully'}),200
     else:
         return jsonify({'msg':'bad request object, params missing'}),400
 
 @ap.route('/api/v1/parcels/<int:id>/changedest',methods=['PUT'])
+   
 def changedestination(id):
+    '''
+    changes destination address
+    '''
     rdata=request.get_json()
     newdest=rdata['destination']
+    if not PARCEL.is_parcel_exist(id):
+        return jsonify({"msg": "parcel delivery request not found"}), 404
+
     if not PARCEL.is_order_delivered(id):
         PARCEL.changedestination(newdest,id)
         return jsonify({'msg':'updated successfully'}),200
@@ -91,10 +102,13 @@ def not_validresponse():
     helper to refactor similar response
     '''
     return jsonify({"error": 'Bad Request object,expected data is missing'}), 400
-def is_should_update(loc,status):
-    if len(status)>2:
-        if len(loc)>3:
+def is_should_update(data):
+    if 'current_location' in data and 'status' in data:
             return True
     return False
 
 
+def sendemail(email,parceltoupdate):
+    msg = Message(subject="SendIT update",body="Your order was updated successfully"+parceltoupdate,sender="chrisahebwa@gmail.com",
+                recipients=["crycetruly@gmail.com"])
+    mail.send(msg)
