@@ -1,13 +1,10 @@
 from flask import jsonify, request, Blueprint
 from flask_mail import  Mail,Message
 from app.model.parcel import Parcel
-ap = Blueprint('endpoint', __name__)
-mail=Mail(ap)
-PARCEL = Parcel()
+
 
 
 ap = Blueprint('endpoint', __name__)
-mail=Mail(ap)
 PARCEL = Parcel()
 
 
@@ -76,7 +73,7 @@ def update_order_request(id):
     request_data=request.get_json()
     if is_should_update(request_data):
         PARCEL.update_order(request_data['current_location'],request_data['status'],id)
-        sendemail('crycetruly@gmail.com',request_data)
+        # sendemail('crycetruly@gmail.com',request_data)
         return jsonify({'msg':'updated successfully'}),200
     else:
         return jsonify({'msg':'bad request object, params missing'}),400
@@ -110,7 +107,7 @@ def is_should_update(data):
     return False
 
 
-def sendemail(email,parceltoupdate):
-    msg = Message(subject="SendIT update",body="Your order was updated successfully"+parceltoupdate,sender="chrisahebwa@gmail.com",
-                recipients=["crycetruly@gmail.com"])
-    mail.send(msg)
+# def sendemail(email,parceltoupdate):
+#     msg = Message(subject="SendIT update",body="Your order was updated successfully"+parceltoupdate,sender="chrisahebwa@gmail.com",
+#                 recipients=["crycetruly@gmail.com"])
+#     mail.send(msg)
