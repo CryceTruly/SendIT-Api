@@ -6,6 +6,11 @@ mail=Mail(ap)
 PARCEL = Parcel()
 
 
+ap = Blueprint('endpoint', __name__)
+mail=Mail(ap)
+PARCEL = Parcel()
+
+
 @ap.route("/")
 def welcome():
     return jsonify({"message": "Welcome to the sendit api,v1"})

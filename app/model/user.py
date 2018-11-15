@@ -8,7 +8,6 @@ class User:
     user data structure
     """
     PARCEL = Parcel()
-
     def __init__(self):
         self.users = []
 

@@ -10,11 +10,10 @@ class Parcel:
     """
     data structures
     """
-
+    parcels = []
     def __init__(self):
-        self.parcels = []
+       
         self.base_price = 5
-
         self.trulysKey='AIzaSyDCMKCmQrlKbMAI8BfpNUkDKguW8rl6Yz8'
 
     def is_parcel_exist(self, id):
