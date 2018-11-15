@@ -51,6 +51,8 @@ py.test
 | `api/v1/users` | `GET` | Retrieve all users |
 | `api/v1/users` | `POST` |  Creates a new User |
 | `api/v1/users/<int:id>/parcels` | `GET` | Retrieves parcel orders for a specific user |
+| `api/v1/parcels/<int:id>/changedest` | `PUT` | Changes destination for a specific parcel order |
+| `api/v1/parcels/<int:id>/update` | `PUT` | Changes status and or current location for a specific parcel order |
 
 ## Deployement
 [Heroku Deployement](https://senditappp.herokuapp.com)
