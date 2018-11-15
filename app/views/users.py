@@ -1,9 +1,9 @@
 from flask import jsonify, request, Blueprint
 
-from app.model.parcel import ParcelList
+from app.model.parcel import Parcel
 from app.model.user import User
 
-PARCEL = ParcelList()
+PARCEL = Parcel()
 USER = User()
 user_print = Blueprint('user_print', __name__)
 all = PARCEL.get_all_parcel()
