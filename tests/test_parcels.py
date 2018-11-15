@@ -228,9 +228,5 @@ class TestsParcel(unittest.TestCase):
             data=json.dumps(req2),
             content_type="application/json")
         self.assertEqual(response.status_code, 200)
-    def test_can_talk_to_api(self):
-        response=requests.get("https://www.mapquestapi.com/geocoding")
-        self.assertEqual(response.status_code,200)
-        self.assertEqual(response.status,'200 OK')
         
     
