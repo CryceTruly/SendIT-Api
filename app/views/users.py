@@ -27,7 +27,6 @@ def create_user():
     request_data = request.get_json()
     if not USER.is_valid_user_request(request_data):
         return jsonify({"success": False, "msg": "Bad request"}), 400
-
     if not USER.is_valid(request_data['email']):
         return jsonify({"success": False, "msg": "Email is badly formatted"}), 400
     if not USER.is_email_taken(request_data['email']):

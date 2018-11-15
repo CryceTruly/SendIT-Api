@@ -3,16 +3,18 @@ import json
 import requests
 from flask import Response
 import requests
-from flask_mail import Message
+import  geopy.distance
+
 
 class Parcel:
     """
     data structures
     """
-    parcels=[]
+    parcels = []
+
     def __init__(self):
         self.base_price = 5
-        self.trulysKey='esAok6JidUSx18ampgZAt5T8QjCiuw5w'
+        self.trulysKey = 'esAok6JidUSx18ampgZAt5T8QjCiuw5w'
 
     def is_parcel_exist(self, id):
         """check if parcel not exist in the parcel list """
@@ -48,15 +50,16 @@ class Parcel:
                 'current_location': parcel_data['current_location'],
                 'created': datetime.datetime.now(),
                 'user_id': parcel_data['user_id'],
-                'recipient_address': parcel_data['recipient_address'],
+                'sender_email': parcel_data['sender_email'],
                 'recipient_phone': parcel_data['recipient_phone'],
                 'recipient_email': parcel_data['recipient_email'],
                 'weight': parcel_data['weight'],
-                'distance': self.get_distance(parcel_data['pickup_address'], parcel_data['destination_address']),
+                'distance': self.get_distance(self.getpickuplatlng(parcel_data['pickup_address']),
+                                              self.getdestinationlatlng(parcel_data['destination_address'])),
                 'pick_up_lat_lng': self.getpickuplatlng(parcel_data['pickup_address']),
                 'destination_lat_lng': self.getdestinationlatlng(parcel_data['destination_address']),
-                'price': self.get_charge(parcel_data['weight'], self.get_distance(parcel_data['pickup_address'],
-                                                                                  parcel_data['destination_address']))
+                'price': self.get_charge(parcel_data['weight'],self.get_distance(self.getpickuplatlng(parcel_data['pickup_address']),
+                                              self.getdestinationlatlng(parcel_data['destination_address'])))
 
             }
             self.parcels.append(parcel)
@@ -97,7 +100,7 @@ class Parcel:
                     'current_location': parcel['current_location'],
                     'created': parcel['created'],
                     'user_id': parcel['user_id'],
-                    'recipient_address': parcel['recipient_address'],
+                    'sender_email': parcel['sender_email'],
                     'recipient_phone': parcel['recipient_phone'],
                     'recipient_email': parcel['recipient_email'],
                     'weight': parcel['weight'],
@@ -122,8 +125,8 @@ class Parcel:
 
     def is_valid_request(self, newparcel):
         if "destination_address" in newparcel and "pickup_address" in newparcel \
-                and "comment_description" in newparcel and "created" in newparcel and \
-                "user_id" in newparcel and "recipient_address" in newparcel and "recipient_phone" in newparcel and \
+                and "comment_description" in newparcel  and \
+                "user_id" in newparcel and "sender_email" in newparcel and "recipient_phone" in newparcel and \
                 "recipient_email" in newparcel and "status" in newparcel and "recipient_name" in newparcel and "weight" in newparcel:
             return True
         else:
@@ -143,46 +146,56 @@ class Parcel:
         return self.base_price + (weight * distance)
 
     def get_distance(self, point1, point2):
-        return 200
+        ls = []
+        for i in point1.values():
+            ls.append(i)
+        cords_1=(tuple(ls))
+        ls2=[]
+        for x in point2.values():
+            ls2.append(x)
+        cords_2 = (tuple(ls2))
+
+        return geopy.distance.vincenty(cords_1, cords_2).km
 
     def getpickuplatlng(self, add):
         try:
-            r = requests.get("https://www.mapquestapi.com/geocoding/v1/address?key="+self.trulysKey+"&inFormat=kvp&outFormat=json&location= "+add+"&thumbMaps=false")
-            data=r.json()
-            results=data['results'][0]
-            locations=results['locations']
-            latlng=locations[0].get('latLng')
+            r = requests.get(
+                "https://www.mapquestapi.com/geocoding/v1/address?key=" + self.trulysKey + "&inFormat=kvp&outFormat=json&location= " + add + "&thumbMaps=false")
+            data = r.json()
+            results = data['results'][0]
+            locations = results['locations']
+            latlng = locations[0].get('latLng')
             return latlng
         except Exception as identifier:
-           print('Network Error')
-           return {"lat": -24.90629, "lng": 152.19168}
-        
+            print('Network Error')
+            return {"lat": -24.90629, "lng": 152.19168}
 
     def getdestinationlatlng(self, add):
         try:
-                r = requests.get("https://www.mapquestapi.com/geocoding/v1/address?key="+self.trulysKey+"&inFormat=kvp&outFormat=json&location= "+add+"&thumbMaps=false")
-                data=r.json()
-                results=data['results'][0]
-                locations=results['locations']
-                latlng=locations[0].get('latLng')
-                return latlng
+            r = requests.get(
+                "https://www.mapquestapi.com/geocoding/v1/address?key=" + self.trulysKey + "&inFormat=kvp&outFormat=json&location= " + add + "&thumbMaps=false")
+            data = r.json()
+            results = data['results'][0]
+            locations = results['locations']
+            latlng = locations[0].get('latLng')
+            return latlng
         except Exception as identifier:
-                print('Network Error')
-                return {"lat": -27.86015, "lng": 153.35434}
-        
-    def formatted_pick_address(self,pickupadd):
+            print('Network Error')
+            return {"lat": -27.86015, "lng": 153.35434}
+
+    def formatted_pick_address(self, pickupadd):
         '''
         should return a pickup address formatted correctly
         TODO:
         add a billing account to the google maps api and use that
         '''
         return pickupadd
-        
-    def update_order(self,current_location,status,id):
+
+    def update_order(self, current_location, status, id):
         '''
         updates the status and or the current location
         '''
-        parceltoupdate={}
+        parceltoupdate = {}
         for parcel in self.parcels:
             if parcel['id'] == id:
                 parceltoupdate = {
@@ -193,9 +206,9 @@ class Parcel:
                     'status': status,
                     'current_location': current_location,
                     'created': parcel['created'],
-                    'updated':datetime.datetime.now(),
+                    'updated': datetime.datetime.now(),
                     'user_id': parcel['user_id'],
-                    'recipient_address': parcel['recipient_address'],
+                    'sender_email': parcel['sender_email'],
                     'recipient_phone': parcel['recipient_phone'],
                     'recipient_email': parcel['recipient_email'],
                     'weight': parcel['weight'],
@@ -210,26 +223,25 @@ class Parcel:
 
         return parceltoupdate
 
-
-    def changedestination(self,newdest,id):
+    def changedestination(self, newdest, id):
         '''
         allows user to change destination
 
         '''
-        parceltoupdate={}
+        parceltoupdate = {}
         for parcel in self.parcels:
             if parcel['id'] == id:
                 parceltoupdate = {
                     'id': parcel['id'],
                     'pickup_address': parcel['pickup_address'],
-                    'destination_address':newdest,
+                    'destination_address': newdest,
                     'comment_description': parcel['comment_description'],
                     'status': parcel['status'],
-                    'current_location':parcel['current_location'],
+                    'current_location': parcel['current_location'],
                     'created': parcel['created'],
-                    'updated':datetime.datetime.now(),
+                    'updated': datetime.datetime.now(),
                     'user_id': parcel['user_id'],
-                    'recipient_address': parcel['recipient_address'],
+                    'sender_email': parcel['sender_email'],
                     'recipient_phone': parcel['recipient_phone'],
                     'recipient_email': parcel['recipient_email'],
                     'weight': parcel['weight'],
@@ -241,7 +253,4 @@ class Parcel:
                 }
                 parcel.update(parceltoupdate)
 
-
         return parceltoupdate
-
-    
