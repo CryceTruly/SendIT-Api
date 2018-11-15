@@ -1,6 +1,5 @@
 import datetime
 import json
-import requests
 from flask import Response
 import requests
 import  geopy.distance
@@ -212,11 +211,11 @@ class Parcel:
                     'recipient_phone': parcel['recipient_phone'],
                     'recipient_email': parcel['recipient_email'],
                     'weight': parcel['weight'],
-                    'distance': self.get_distance(parcel['pickup_address'], parcel['destination_address']),
-                    'pick_up_lat_lng': self.getpickuplatlng(parcel['pickup_address']),
-                    'destination_lat_lng': self.getdestinationlatlng(parcel['destination_address']),
+                    'distance': parcel['distance'],
+                    'pick_up_lat_lng': parcel['pick_up_lat_lng'],
+                    'destination_lat_lng':parcel['destination_lat_lng'],
                     'price': self.get_charge(parcel['weight'],
-                                             self.get_distance(parcel['pickup_address'], parcel['destination_address']))
+                                             self.get_distance(parcel['pick_up_lat_lng'], parcel['destination_lat_lng']))
 
                 }
                 parcel.update(parceltoupdate)
@@ -226,7 +225,6 @@ class Parcel:
     def changedestination(self, newdest, id):
         '''
         allows user to change destination
-
         '''
         parceltoupdate = {}
         for parcel in self.parcels:
@@ -245,10 +243,10 @@ class Parcel:
                     'recipient_phone': parcel['recipient_phone'],
                     'recipient_email': parcel['recipient_email'],
                     'weight': parcel['weight'],
-                    'distance': self.get_distance(parcel['pickup_address'], newdest),
+                    'distance': self.get_distance(parcel['pick_up_lat_lng'], self.getdestinationlatlng(newdest)),
                     'pick_up_lat_lng': parcel['pick_up_lat_lng'],
                     'destination_lat_lng': self.getdestinationlatlng(newdest),
-                    'price': parcel['price']
+                    'price': self.get_charge(parcel['weight'],self.get_distance(parcel['pick_up_lat_lng'], self.getdestinationlatlng(newdest)))
 
                 }
                 parcel.update(parceltoupdate)

@@ -21,7 +21,7 @@ def get_parcels():
     all = PARCEL.get_all_parcel()
     if all:
         return jsonify({'count': len(all), 'orders': all}), 200
-    return jsonify({'msg': 'no parcel delivery orders posted yet', 'count': len(all)}), 404
+    return jsonify({'msg': 'No parcel delivery orders posted yet', 'count': len(all)}), 404
 
 
 # GET parcels/id
@@ -43,12 +43,12 @@ def add_parcel():
     '''
     if not request.content_type == 'application/json':
         return jsonify({"failed": 'Content-type must be application/json'}), 415
-    request_data=request.get_json();
+    request_data = request.get_json();
     if not request.data is None:
         not_validresponse()
 
     if not PARCEL.is_valid_request(request_data):
-        not_validresponse()
+        return not_validresponse()
     if not is_valid(request_data['sender_email']):
         return jsonify({"msg": "Sender email is invalid"}), 400
 
@@ -75,9 +75,11 @@ def cancel_parcel_request(id):
 @ap.route('/api/v1/parcels/<int:id>/update', methods=['PUT'])
 def update_order_request(id):
     request_data = request.get_json()
+    if not PARCEL.is_parcel_exist(id):
+        return jsonify({'msg':'order not found'}),404
     if is_should_update(request_data):
         PARCEL.update_order(request_data['current_location'], request_data['status'], id)
-        sendemail('crycetruly@gmail.com', request_data)
+
         return jsonify({'msg': 'updated successfully'}), 200
     else:
         return jsonify({'msg': 'bad request object, params missing'}), 400
@@ -89,7 +91,9 @@ def changedestination(id):
     changes destination address
     '''
     rdata = request.get_json()
-    newdest = rdata['destination']
+    if not "destination_address" in rdata:
+        return jsonify({'msg': 'Please add a new destination address'}), 415
+    newdest = rdata['destination_address']
     if not PARCEL.is_parcel_exist(id):
         return jsonify({"msg": "parcel delivery request not found"}), 404
 
@@ -114,10 +118,15 @@ def is_should_update(data):
 
 
 def sendemail(email, parceltoupdate):
-    msg = Message(subject="SendIT update", body="Your order was updated successfully" + parceltoupdate,
-                  sender="chrisahebwa@gmail.com",
-                  recipients=["crycetruly@gmail.com"])
-    mail.send(msg)
+    try:
+        msg = Message("My SendIT Order Delivery Update",
+                      sender="aacryce@gmail.com",
+                      recipients=[email])
+        msg.body = parceltoupdate
+        mail.send(msg)
+        return 'Mail sent!'
+    except Exception as identifier:
+        pass
 
 
 def is_valid(email):

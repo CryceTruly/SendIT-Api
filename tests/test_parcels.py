@@ -43,7 +43,7 @@ class TestsParcel(unittest.TestCase):
             'current_location': 'Mabarara Kikoni Home 13',
             'created': "Sat, 10 Nov 2018 13:46:41 GMT",
             'user_id': 1,
-            'recipient_address': 'Julie Muli',
+            'sender_email': 'sendermail@gmail.com',
             'recipient_phone': '0767876666',
             'recipient_email': 'recipient@email.com'
         }
@@ -65,7 +65,7 @@ class TestsParcel(unittest.TestCase):
             'current_location': 'Mabarara Kikoni Home 13',
             'created': "Sat, 10 Nov 2018 13:46:41 GMT",
             'user_id': 1,
-            'recipient_address': 'Julie Muli',
+            'sender_email': 'sender@email.com',
             'recipient_phone': '0767876666',
             'recipient_email': 'recipient@email.com',
             'recipient_name': 'name',
@@ -88,7 +88,7 @@ class TestsParcel(unittest.TestCase):
             'status': 'In Transit',
             'current_location': 'Mabarara Kikoni Home 13',
             'created': "Sat, 10 Nov 2018 13:46:41 GMT",
-            'recipient_address': 'Julie Muli',
+            'sender_email': 'senderemail@g.com',
             'recipient_phone': '0767876666',
             'recipient_email': 'recipient@email.com'
         }
@@ -135,7 +135,7 @@ class TestsParcel(unittest.TestCase):
         data = json.loads(response.data.decode())
         count = data['count']
         if count == 0:
-            self.assertEqual(data['msg'], 'No parcels')
+            self.assertEqual(data['msg'], 'No parcel delivery orders posted yet')
         self.assertEqual(response.status, '200 OK')
 
     def test_cant_cancel_adelivered_order(self):
