@@ -4,15 +4,15 @@ import requests
 from flask import Response
 import requests
 from flask_mail import Message
+
 class ParcelList:
     """
     data structures
     """
-
+    parcels=[]
     def __init__(self):
-        self.parcels = []
         self.base_price = 5
-        self.trulysKey='AIzaSyDCMKCmQrlKbMAI8BfpNUkDKguW8rl6Yz8'
+        self.trulysKey='esAok6JidUSx18ampgZAt5T8QjCiuw5w'
 
     def is_parcel_exist(self, id):
         """check if parcel not exist in the parcel list """
@@ -146,13 +146,37 @@ class ParcelList:
         return 200
 
     def getpickuplatlng(self, add):
-        return 200
+        try:
+            r = requests.get("https://www.mapquestapi.com/geocoding/v1/address?key="+self.trulysKey+"&inFormat=kvp&outFormat=json&location= "+add+"&thumbMaps=false")
+            data=r.json()
+            results=data['results'][0]
+            locations=results['locations']
+            latlng=locations[0].get('latLng')
+            return latlng
+        except Exception as identifier:
+           print('Network Error')
+           return {"lat": -24.90629, "lng": 152.19168}
+        
 
     def getdestinationlatlng(self, add):
-        return 33
+        try:
+                r = requests.get("https://www.mapquestapi.com/geocoding/v1/address?key="+self.trulysKey+"&inFormat=kvp&outFormat=json&location= "+add+"&thumbMaps=false")
+                data=r.json()
+                results=data['results'][0]
+                locations=results['locations']
+                latlng=locations[0].get('latLng')
+                return latlng
+        except Exception as identifier:
+                print('Network Error')
+                return {"lat": -27.86015, "lng": 153.35434}
+        
     def formatted_pick_address(self,pickupadd):
-        r = requests.get('https://maps.googleapis.com/maps/api/geocode/json?address='+pickupadd+'&key='+self.trulysKey)
-        print(r)
+        '''
+        should return a pickup address formatted correctly
+        TODO:
+        add a billing account to the google maps api and use that
+        '''
+        return pickupadd
         
     def update_order(self,current_location,status,id):
         '''
@@ -220,3 +244,4 @@ class ParcelList:
 
         return parceltoupdate
 
+    
