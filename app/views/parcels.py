@@ -1,23 +1,21 @@
 from flask import jsonify, request, Blueprint
+from flask_mail import  Mail,Message
 from app.model.parcel import Parcel
-from flask_mail import Message,Mail
-from app import  *
-
 ap = Blueprint('endpoint', __name__)
-mail=Mail(app=ap)
+mail=Mail(ap)
 PARCEL = Parcel()
 
 
 @ap.route("/")
 def welcome():
-    return jsonify({"message": "Welcome to the sendit api,v1"}),200
+    return jsonify({"message": "Welcome to the sendit api,v1"})
 
 
 # GET parcels
 @ap.route('/api/v1/parcels')
 def get_parcels():
     '''
-    returns a list of all order requests
+    returns a list of all requests
     '''
     all = PARCEL.get_all_parcel()
     if all:

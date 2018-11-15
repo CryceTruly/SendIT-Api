@@ -3,16 +3,19 @@ import json
 from app.model.user import User
 from flask import Response
 import requests
+
 import os
 
 class Parcel:
     """
     data structures
     """
-    parcels=[]
+
     def __init__(self):
+        self.parcels = []
         self.base_price = 5
-        self.trulysKey=os.environ.get('trulysKey')
+
+        self.trulysKey='AIzaSyDCMKCmQrlKbMAI8BfpNUkDKguW8rl6Yz8'
 
     def is_parcel_exist(self, id):
         """check if parcel not exist in the parcel list """
@@ -165,37 +168,13 @@ class Parcel:
         return 200
 
     def getpickuplatlng(self, add):
-        try:
-            r = requests.get("https://www.mapquestapi.com/geocoding/v1/address?key="+self.trulysKey+"&inFormat=kvp&outFormat=json&location= "+add+"&thumbMaps=false")
-            data=r.json()
-            results=data['results'][0]
-            locations=results['locations']
-            latlng=locations[0].get('latLng')
-            return latlng
-        except Exception as identifier:
-           print('Network Error')
-           return {"lat": -24.90629, "lng": 152.19168}
-        
+        return 200
 
     def getdestinationlatlng(self, add):
-        try:
-                r = requests.get("https://www.mapquestapi.com/geocoding/v1/address?key="+self.trulysKey+"&inFormat=kvp&outFormat=json&location= "+add+"&thumbMaps=false")
-                data=r.json()
-                results=data['results'][0]
-                locations=results['locations']
-                latlng=locations[0].get('latLng')
-                return latlng
-        except Exception as identifier:
-                print('Network Error')
-                return {"lat": -27.86015, "lng": 153.35434}
-        
+        return 33
     def formatted_pick_address(self,pickupadd):
-        '''
-        should return a pickup address formatted correctly
-        TODO:
-        add a billing account to the google maps api and use that
-        '''
-        return pickupadd
+        r = requests.get('https://maps.googleapis.com/maps/api/geocode/json?address='+pickupadd+'&key='+self.trulysKey)
+        print(r)
         
     def update_order(self,current_location,status,id):
         '''
@@ -263,4 +242,3 @@ class Parcel:
 
         return parceltoupdate
 
-    

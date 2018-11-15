@@ -5,7 +5,7 @@ from app.views.parcels import Parcel
 
 class User:
     """
-   user data structure
+    user data structure
     """
     PARCEL = Parcel()
 
