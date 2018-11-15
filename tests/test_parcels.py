@@ -1,8 +1,7 @@
 import json
 import unittest
-
-from app import app
-
+from app import *
+import requests
 
 class TestsParcel(unittest.TestCase):
     def setUp(self):
@@ -194,7 +193,7 @@ class TestsParcel(unittest.TestCase):
             'pickup_address': 'Kampala Kikoni Makerere 13',
             'destination_address': 'Mubende Kikoni Home 13',
             'comment_description': 'My parcels contain a laptop,please deliver',
-            'status': 'delivered',
+            'status': 'in transit',
             'current_location': 'Mabarara Kikoni Home 13',
             'created': "Sat, 10 Nov 2018 13:46:41 GMT",
             'user_id': 1,
@@ -213,7 +212,7 @@ class TestsParcel(unittest.TestCase):
             "api/v1/parcels/1/update",
             data=json.dumps(req2),
             content_type="application/json")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 500)
 
     def test_can_change_dest(self):
        
@@ -229,3 +228,9 @@ class TestsParcel(unittest.TestCase):
             data=json.dumps(req2),
             content_type="application/json")
         self.assertEqual(response.status_code, 200)
+    def test_can_talk_to_api(self):
+        response=requests.get("https://www.mapquestapi.com/geocoding")
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.status,'200 OK')
+        
+    
