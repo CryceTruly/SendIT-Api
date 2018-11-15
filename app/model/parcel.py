@@ -5,7 +5,7 @@ from flask import Response
 import requests
 from flask_mail import Message
 
-class ParcelList:
+class Parcel:
     """
     data structures
     """

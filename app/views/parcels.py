@@ -1,9 +1,9 @@
 from flask import jsonify, request, Blueprint
-from app.model.parcel import ParcelList
+from app.model.parcel import Parcel
 from app import *
 
 ap = Blueprint('endpoint', __name__)
-PARCEL = ParcelList()
+PARCEL = Parcel()
 
 
 @ap.route("/")

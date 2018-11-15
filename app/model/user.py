@@ -1,14 +1,14 @@
 import datetime
 import re
 
-from .parcel import ParcelList
+from .parcel import Parcel
 
 
 class User:
     """
    user data structure
     """
-    PARCEL = ParcelList()
+    PARCEL = Parcel()
     
 
 
