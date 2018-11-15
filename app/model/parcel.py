@@ -4,6 +4,7 @@ import requests
 from flask import Response
 import requests
 from flask_mail import Message
+import os
 
 class Parcel:
     """
@@ -12,7 +13,7 @@ class Parcel:
     parcels=[]
     def __init__(self):
         self.base_price = 5
-        self.trulysKey='esAok6JidUSx18ampgZAt5T8QjCiuw5w'
+        self.trulysKey=os.environ.get('trulysKey')
 
     def is_parcel_exist(self, id):
         """check if parcel not exist in the parcel list """
