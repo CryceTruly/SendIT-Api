@@ -3,7 +3,7 @@ import json
 from flask import Response
 import requests
 import  geopy.distance
-
+import os
 
 class Parcel:
     """
@@ -13,7 +13,7 @@ class Parcel:
 
     def __init__(self):
         self.base_price = 5
-        self.trulysKey = 'esAok6JidUSx18ampgZAt5T8QjCiuw5w'
+        self.trulysKey = os.environ.get('trulysKey')
 
     def is_parcel_exist(self, id):
         """check if parcel not exist in the parcel list """
@@ -63,7 +63,7 @@ class Parcel:
             }
             self.parcels.append(parcel)
             response = Response(response=json.dumps({
-                'msg': "Parcel delivery successfully created", 'orderid': parcel.get('id')}),
+                'msg': "Parcel delivery successfully created", 'order_id': parcel.get('id')}),
                 status=201, mimetype="application/json")
             response.headers['Location'] = "parcels/" + str(parcel['id'])
             return response
@@ -87,7 +87,6 @@ class Parcel:
                 return parcel
 
     def cancel_parcel(self, id):
-        global cancelled_parcel
         for parcel in self.parcels:
             if parcel['id'] == id:
                 cancelled_parcel = {
@@ -220,7 +219,7 @@ class Parcel:
                 }
                 parcel.update(parceltoupdate)
 
-        return parceltoupdate
+        return parceltoupdate['sender_email']
 
     def changedestination(self, newdest, id):
         '''
@@ -251,4 +250,4 @@ class Parcel:
                 }
                 parcel.update(parceltoupdate)
 
-        return parceltoupdate
+        return parceltoupdate['sender_email']

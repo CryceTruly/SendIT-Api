@@ -1,22 +1,21 @@
 from flask import jsonify, request, Blueprint
 from app.model.parcel import Parcel
-from app import *
+from flask_mail import Mail,Message
 import re
 
 ap = Blueprint('endpoint', __name__)
 PARCEL = Parcel()
 
-
 @ap.route("/")
 def welcome():
-    return jsonify({"message": "Welcome to the sendit api,v1"}), 200
+    return jsonify({"message": "Welcome to the sendit api v1"}), 200
 
 
 # GET parcels
 @ap.route('/api/v1/parcels')
 def get_parcels():
     '''
-    returns a list of all order requests
+        returns a list of all order requests
     '''
     all = PARCEL.get_all_parcel()
     if all:
@@ -43,7 +42,7 @@ def add_parcel():
     '''
     if not request.content_type == 'application/json':
         return jsonify({"failed": 'Content-type must be application/json'}), 415
-    request_data = request.get_json();
+    request_data = request.get_json()
     if not request.data is None:
         not_validresponse()
 
@@ -76,11 +75,14 @@ def cancel_parcel_request(id):
 def update_order_request(id):
     request_data = request.get_json()
     if not PARCEL.is_parcel_exist(id):
-        return jsonify({'msg':'order not found'}),404
+        return jsonify({'msg': 'order not found'}), 404
     if is_should_update(request_data):
-        PARCEL.update_order(request_data['current_location'], request_data['status'], id)
+        email = PARCEL.update_order(request_data['current_location'], request_data['status'], id)
+       #TODO SEND AN EMAIL
 
         return jsonify({'msg': 'updated successfully'}), 200
+
+
     else:
         return jsonify({'msg': 'bad request object, params missing'}), 400
 
@@ -117,16 +119,16 @@ def is_should_update(data):
     return False
 
 
-def sendemail(email, parceltoupdate):
-    try:
-        msg = Message("My SendIT Order Delivery Update",
-                      sender="aacryce@gmail.com",
-                      recipients=[email])
-        msg.body = parceltoupdate
-        mail.send(msg)
-        return 'Mail sent!'
-    except Exception as identifier:
-        pass
+# def sendemail(email, parceltoupdate):
+#     try:
+#         msg = Message("My SendIT Order Delivery Update",
+#                       sender="aacryce@gmail.com",
+#                       recipients=[email])
+#         msg.body = 'hello there'
+#         mail.send(msg)
+#         return jsonify({'msg': 'updated successfully'}), 200
+#     except Exception as identifier:
+#         return jsonify(identifier)
 
 
 def is_valid(email):
