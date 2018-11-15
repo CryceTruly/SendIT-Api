@@ -1,9 +1,8 @@
 import datetime
 import json
-import requests
+from app.model.user import User
 from flask import Response
 import requests
-from flask_mail import Message
 import os
 
 class Parcel:
@@ -22,14 +21,31 @@ class Parcel:
                 return True
         return False
 
-    def is_valid_parcel(self, parcel_data):
+    def is_validated_data(self, parcel_data):
         """ check whether parcel is a valid one """
         details = parcel_data
         comment_description = details['comment_description']
         weight = details['weight']
+        if not isinstance(weight, int):
+            return "Description should be an integer format"
         recipient_email = details['recipient_email']
+        user=User()
+        if not user.is_valid(recipient_email):
+            return "Recipient Email is not valid"
         if not isinstance(comment_description, str):
             return "Description should be string format"
+
+        if len(comment_description)>5:
+            return "Description should atleast 5 characters or more"
+        if len(details['recipient_phone'])<10:
+            return "Phone numbers should be atleast 10 characters long"
+        if len(details['pickup_address'])<3:
+            return "pickup_address should be longer and should exist"
+        if len(details['destination_address']) < 3:
+            return "destination addresses should be longer and should exist"
+        if len(details['recipient_name']) < 2:
+            return "Recipient Name should be atleast 3 characters long"
+
 
     def add_parcel(self, parcel_data):
         '''
@@ -144,6 +160,8 @@ class Parcel:
         return self.base_price + (weight * distance)
 
     def get_distance(self, point1, point2):
+        #TODO CALCULATE DISTANCE
+
         return 200
 
     def getpickuplatlng(self, add):

@@ -1,20 +1,17 @@
 import datetime
 import re
 
-from .parcel import Parcel
-
+from app.views.parcels import Parcel
 
 class User:
     """
    user data structure
     """
     PARCEL = Parcel()
-    
-
 
     def __init__(self):
         self.users = []
-      
+
     def is_user_exist(self, id):
         """check if parcel not exist in the parcel list """
         for user in self.users:
@@ -58,7 +55,7 @@ class User:
             return False
 
     def is_valid(self, email):
-        """helper for chcking valid emails"""
+        """helper for checking valid emails"""
 
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             return False

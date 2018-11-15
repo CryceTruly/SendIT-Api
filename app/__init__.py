@@ -1,5 +1,5 @@
 from flask import Flask
-from app.views.parcels import ap
+from .views.parcels import ap
 from app.views.users import user_print
 
 app = Flask(__name__)

@@ -1,8 +1,10 @@
 from flask import jsonify, request, Blueprint
 from app.model.parcel import Parcel
-from app import *
+from flask_mail import Message,Mail
+from app import  *
 
 ap = Blueprint('endpoint', __name__)
+mail=Mail(app=ap)
 PARCEL = Parcel()
 
 
@@ -46,7 +48,7 @@ def add_parcel():
         not_validresponse()
     if not PARCEL.is_valid_request(request.get_json()):
         not_validresponse()
-
+    PARCEL.is_validated_data(request.get_json())
     return PARCEL.add_parcel(request.get_json())
 
 

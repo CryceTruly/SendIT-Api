@@ -38,13 +38,9 @@ python run.py
 * for tests run in terminal using:
 
 ```
-py.test | python manage.py test
+py.test
 ```
-* for running tests with coverage
 
-```
-python manage.py cov
-```
 #### URL endpoints
 
 | URL Endpoint | HTTP Methods | Summary |
