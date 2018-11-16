@@ -163,7 +163,7 @@ class TestsParcel(unittest.TestCase):
             "api/v1/parcels/11/cancel",
             data='',
             content_type="application/json")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
     def test_can_update_location(self):
         '''
