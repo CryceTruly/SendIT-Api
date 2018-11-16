@@ -47,17 +47,14 @@ class User:
         return {"user_parcel_orders": user_parcels, "count": len(user_parcels)}
 
     def is_valid_user_request(self, newuser):
-        '''
-        helper to check required fields
-        '''
-        keys=["fullname", "fullname","phone_number",
-                "password","email"]
-        if all(key in keys for key in newuser):
+        keys = ["fullname", "username", "phone_number",
+                "password", "email"]
+        if set(keys).issubset(newuser):
             return True
-        else:
-            return False
+        return False
+
     def is_valid(self, email):
-        """helper for chcking valid emails"""
+        """helper for checking valid emails"""
 
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             return False
