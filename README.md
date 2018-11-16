@@ -1,7 +1,8 @@
 # SendIT-Api
 [![Build Status](https://travis-ci.org/CryceTruly/SendIT-Api.svg?branch=mainapp)](https://travis-ci.org/CryceTruly/SendIT-Api) [![Coverage Status](https://coveralls.io/repos/github/CryceTruly/SendIT-Api/badge.svg?branch=mainapp)](https://coveralls.io/github/CryceTruly/SendIT-Api?branch=mainapp)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ac47983c1bc5459e9774c9af64f7974d)](https://www.codacy.com/app/CryceTruly/SendIT-Api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CryceTruly/SendIT-Api&amp;utm_campaign=Badge_Grade)
 ![Hackage-Deps](https://img.shields.io/hackage-deps/v/lens.svg)
-(https://api.codacy.com/project/badge/Grade/ac47983c1bc5459e9774c9af64f7974d)](https://www.codacy.com/app/CryceTruly/SendIT-Api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CryceTruly/SendIT-Api&amp;utm_campaign=Badge_Grade)
+
 
 A rest api for the SendIT application
 
