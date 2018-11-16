@@ -22,18 +22,6 @@ class Parcel:
                 return True
         return False
 
-    def is_valid_parcel(self, parcel_data):
-        """ check whether parcel is a valid one """
-        details = parcel_data
-        comment_description = details['comment_description']
-        weight = details['weight']
-        recipient_email = details['recipient_email']
-        if not isinstance(comment_description, str):
-            return "Description should be string format"
-        if not isinstance(weight,int):
-            return "Weight should be in integer format"
-        
-
     def add_parcel(self, parcel_data):
         '''
         creates a new parcel order
@@ -260,9 +248,9 @@ class Parcel:
     def is_parcel_owner(self,data,id):
         user_id=data['user_id']
         for p in self.parcels:
-            if p['user_id']!=user_id:
-                return False
-        return True
+            if p['user_id']==user_id:
+                return True
+        return False
     
 
 
