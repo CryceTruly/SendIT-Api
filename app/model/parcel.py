@@ -30,6 +30,9 @@ class Parcel:
         recipient_email = details['recipient_email']
         if not isinstance(comment_description, str):
             return "Description should be string format"
+        if not isinstance(weight,int):
+            return "Weight should be in integer format"
+        
 
     def add_parcel(self, parcel_data):
         '''
@@ -261,3 +264,10 @@ class Parcel:
                 return False
         return True
     
+
+
+
+
+
+
+

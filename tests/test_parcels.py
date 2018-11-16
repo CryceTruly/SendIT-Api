@@ -123,7 +123,7 @@ class TestsParcel(unittest.TestCase):
                               data='',
                               content_type="application/json")
 
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 400)
     def test_get_a_no_parcels_message(self):
         '''
         tests if a user gets a readable no users message when users are not there

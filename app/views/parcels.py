@@ -50,6 +50,25 @@ def add_parcel():
         return not_validresponse()
     if not is_valid(request_data['sender_email']):
         return jsonify({"msg": "Sender email is invalid"}), 400
+    if not is_valid(request_data['recipient_email']):
+        return jsonify({"msg": "Recipient email is invalid"}), 400
+    if len(str(request_data['recipient_phone']))<10:
+         return jsonify({"msg": "Recipient Phone number should be atleast 10 characters"}), 400
+
+    if len(str(request_data['comment_description']))<5:
+         return jsonify({"msg": "Your Parcel description should be atleast 5 characters"}), 400
+    if not isinstance(request_data['comment_description'],str):
+        return jsonify({"msg": "Description should be string values"}), 400
+    if not isinstance(request_data['pickup_address'],str):
+        return jsonify({"msg": "pickup_address should be string values"}), 400
+
+    if not isinstance(request_data['destination_address'],str):
+        return jsonify({"msg": "destination_address should be string values"}), 400
+    if not isinstance(request_data['status'],str):
+        return jsonify({"msg": "current status should be string values"}), 400
+    if not isinstance(request_data['weight'],int):
+        return jsonify({"msg": "weight should be integer values"}), 400
+
 
     return PARCEL.add_parcel(request.get_json())
 
