@@ -1,7 +1,7 @@
-#language to use in travis containers
+#language to use in tavis containers
 language: python
 python:
-    - "python-3.6"
+    - "3.6"
 # command to install dependencies
 install:
   - pip install -r requirements.txt
@@ -9,6 +9,7 @@ install:
 script:
   - python manage.py test
   - python manage.py cov
+  - coverage run --source=. -m unittest discover
 
 
 sudo: required
