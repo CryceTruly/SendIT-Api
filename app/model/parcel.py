@@ -113,10 +113,10 @@ class Parcel:
             return "deleted successfully"
 
     def is_valid_request(self, newparcel):
-        if "destination_address" in newparcel and "pickup_address" in newparcel \
-                and "comment_description" in newparcel  and \
-                "user_id" in newparcel and "sender_email" in newparcel and "recipient_phone" in newparcel and \
-                "recipient_email" in newparcel and "status" in newparcel and "recipient_name" in newparcel and "weight" in newparcel:
+        keys=["destination_address", "pickup_address","comment_description",
+                "user_id","sender_email", "recipient_phone",
+                "recipient_email","status","recipient_name", "weight"]
+        if all(key in keys for key in newparcel):
             return True
         else:
             return False
