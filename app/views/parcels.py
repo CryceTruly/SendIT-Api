@@ -60,11 +60,16 @@ def cancel_parcel_request(id):
     '''
     cancels a specific request given its identifier
     '''
+    if not 'user_id' in request.get_json():
+        return jsonify({'msg':'user_id is required'}),400
     if not PARCEL.is_parcel_exist(id):
         return jsonify({"msg": "parcel delivery request not found"}), 404
 
     if PARCEL.is_order_delivered(id):
         return jsonify({"msg": "Not allowed parcel request has already been delivered"}), 403
+    if not PARCEL.is_parcel_owner(request.get_json(),id):
+        return jsonify({"msg": "You are not the parcel owner cannot cancel order"}), 403
+
     PARCEL.cancel_parcel(id)
     return jsonify(
         {"msg": "parcel request was cancelled successfully", "status": PARCEL.cancel_parcel(id).get("status"),

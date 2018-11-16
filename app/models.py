@@ -31,4 +31,3 @@ class Parcel():
 parcel = Parcel(1, 'startadd', 'endadd', 'myc comment', 'delivered', 'dest addree', 'now', 1, 'recipt add',
                 '075633333333'
                 , 'testuser@gmail.com')
-print(parcel)

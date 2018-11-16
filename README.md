@@ -46,11 +46,55 @@ py.test
 | URL Endpoint | HTTP Methods | Summary |
 | -------- | ------------- | --------- |
 | `api/v1/parcels` | `POST`  | Creates a new Parcel delivery order|
+example
+```
+{
+	"user_id":1,
+	"pickup_address":"Kigali Rwanda",
+	"destination_address":"Jinja Uganda",
+	"comment_description":"comment_description",
+	"status":"started",
+	"current_location":"Kigali Rwanda",
+	"sender_email":"crycetruly@gmail.com",
+	"recipient_phone":"07666777665",
+	"recipient_email":"getaplott@gmail.com",
+	"recipient_name":"name",
+	"weight":20
+}
+```
 | `api/v1/parcels/<int:id>` | `GET` | Retrieves a specific parcel delivery order given its identifier|
+example
+```
+GET http://127.0.0.1:5000/api/v1/parcels/1
+```
 | `api/v1/parcels/<int:id>/cancel` | `PUT` | Cancels a specific parcel delivery order given its identifier |
+```
+http://127.0.0.1:5000/api/v1/parcels/1/cancel
+```
 | `api/v1/users` | `GET` | Retrieve all users |
+```
+GET http://127.0.0.1:5000/api/v1/users
+
+```
+
 | `api/v1/users` | `POST` |  Creates a new User |
+Example body
+```
+Example body
+{
+"fullname":"fullname",
+"username":"username",
+"phone_number":"0756778877",
+"email":"email@email.com",
+"password":"password"
+	
+}
+```
 | `api/v1/users/<int:id>/parcels` | `GET` | Retrieves parcel orders for a specific user |
+```
+eg
+PUT http://127.0.0.1:5000/api/v1/users/1/parcels
+```
 
 ## Deployement
 [Heroku Deployement](https://senditappp.herokuapp.com)

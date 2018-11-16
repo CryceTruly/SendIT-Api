@@ -1,4 +1,4 @@
-#language to use in tavis containers
+#language to use in travis containers
 language: python
 python:
     - "python-3.6"

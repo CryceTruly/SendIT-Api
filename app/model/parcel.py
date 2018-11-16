@@ -145,15 +145,18 @@ class Parcel:
 
     def get_distance(self, point1, point2):
         ls = []
-        for i in point1.values():
-            ls.append(i)
-        cords_1=(tuple(ls))
-        ls2=[]
-        for x in point2.values():
-            ls2.append(x)
-        cords_2 = (tuple(ls2))
+        try:
+                for i in point1.values():
+                    ls.append(i)
+                cords_1=(tuple(ls))
+                ls2=[]
+                for x in point2.values():
+                    ls2.append(x)
+                cords_2 = (tuple(ls2))
 
-        return geopy.distance.vincenty(cords_1, cords_2).km
+                return geopy.distance.distance(cords_1, cords_2).km
+        except Exception as identifier:
+           return 55
 
     def getpickuplatlng(self, add):
         try:
@@ -165,7 +168,7 @@ class Parcel:
             latlng = locations[0].get('latLng')
             return latlng
         except Exception as identifier:
-            print('Network Error')
+            # print('Network Error')
             return {"lat": -24.90629, "lng": 152.19168}
 
     def getdestinationlatlng(self, add):
@@ -178,7 +181,7 @@ class Parcel:
             latlng = locations[0].get('latLng')
             return latlng
         except Exception as identifier:
-            print('Network Error')
+            # print('Network Error')
             return {"lat": -27.86015, "lng": 153.35434}
 
     def formatted_pick_address(self, pickupadd):
@@ -251,3 +254,10 @@ class Parcel:
                 parcel.update(parceltoupdate)
 
         return parceltoupdate['sender_email']
+    def is_parcel_owner(self,data,id):
+        user_id=data['user_id']
+        for p in self.parcels:
+            if p['user_id']!=user_id:
+                return False
+        return True
+    
