@@ -47,16 +47,15 @@ class User:
         return {"user_parcel_orders": user_parcels, "count": len(user_parcels)}
 
     def is_valid_user_request(self, newuser):
-        """
+        '''
         helper to check required fields
-        """
-
-        if "fullname" in newuser and "fullname" in newuser and "phone_number" in newuser and \
-                "email" in newuser and "password" in newuser:
+        '''
+        keys=["fullname", "fullname","phone_number",
+                "password","email"]
+        if all(key in keys for key in newuser):
             return True
         else:
             return False
-
     def is_valid(self, email):
         """helper for chcking valid emails"""
 
