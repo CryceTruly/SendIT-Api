@@ -33,6 +33,9 @@ def create_user():
         return jsonify({"success": False, "msg": "Email is already in use"}), 409
     if not USER.is_username_taken(request_data['username']):
         return jsonify({"success": False, "msg": "Username is already taken"}), 409
+    if len(str(request_data['password']))<6:
+         return jsonify({"success": False, "msg": "Password should be atleast 6 characters long"}), 409
+
     return jsonify(USER.create_new_user(request_data)), 201
 
 
