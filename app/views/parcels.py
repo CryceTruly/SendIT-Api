@@ -1,10 +1,11 @@
 from flask import jsonify, request, Blueprint
 from app.model.parcel import Parcel
-from flask_mail import Mail,Message
+from flask_mail import Mail, Message
 import re
 
 ap = Blueprint('endpoint', __name__)
 PARCEL = Parcel()
+
 
 @ap.route("/")
 def welcome():
@@ -52,63 +53,45 @@ def add_parcel():
         return jsonify({"msg": "Sender email is invalid"}), 400
     if not is_valid(request_data['recipient_email']):
         return jsonify({"msg": "Recipient email is invalid"}), 400
-    if len(str(request_data['recipient_phone']))<10:
-         return jsonify({"msg": "Recipient Phone number should be atleast 10 characters"}), 400
+    if len(str(request_data['recipient_phone'])) < 10:
+        return jsonify({"msg": "Recipient Phone number should be atleast 10 characters"}), 400
 
-    if len(str(request_data['comment_description']))<5:
-         return jsonify({"msg": "Your Parcel description should be atleast 5 characters"}), 400
-    if not isinstance(request_data['comment_description'],str):
+    if len(str(request_data['comment_description'])) < 5:
+        return jsonify({"msg": "Your Parcel description should be atleast 5 characters"}), 400
+    if not isinstance(request_data['comment_description'], str):
         return jsonify({"msg": "Description should be string values"}), 400
-    if not isinstance(request_data['pickup_address'],str):
+    if not isinstance(request_data['pickup_address'], str):
         return jsonify({"msg": "pickup_address should be string values"}), 400
 
-    if not isinstance(request_data['destination_address'],str):
+    if not isinstance(request_data['destination_address'], str):
         return jsonify({"msg": "destination_address should be string values"}), 400
-    if not isinstance(request_data['status'],str):
+    if not isinstance(request_data['status'], str):
         return jsonify({"msg": "current status should be string values"}), 400
-    if not isinstance(request_data['weight'],int):
+    if not isinstance(request_data['weight'], int):
         return jsonify({"msg": "weight should be integer values"}), 400
-
 
     return PARCEL.add_parcel(request.get_json())
 
 
-# PUT /parcels/<parcelId>/cancel
 @ap.route('/api/v1/parcels/<int:id>/cancel', methods=['PUT'])
 def cancel_parcel_request(id):
     '''
     cancels a specific request given its identifier
     '''
     if not 'user_id' in request.get_json():
-        return jsonify({'msg':'user_id is required'}),400
+        return jsonify({'msg': 'user_id is required'}), 400
     if not PARCEL.is_parcel_exist(id):
         return jsonify({"msg": "parcel delivery request not found"}), 404
 
     if PARCEL.is_order_delivered(id):
         return jsonify({"msg": "Not allowed parcel request has already been delivered"}), 403
-    if not PARCEL.is_parcel_owner(request.get_json(),id):
+    if not PARCEL.is_parcel_owner(request.get_json(), id):
         return jsonify({"msg": "You are not the parcel owner cannot cancel order"}), 403
 
     PARCEL.cancel_parcel(id)
     return jsonify(
         {"msg": "parcel request was cancelled successfully", "status": PARCEL.cancel_parcel(id).get("status"),
          "id": PARCEL.cancel_parcel(id).get("id")}), 200
-
-
-@ap.route('/api/v1/parcels/<int:id>/update', methods=['PUT'])
-def update_order_request(id):
-    request_data = request.get_json()
-    if not PARCEL.is_parcel_exist(id):
-        return jsonify({'msg': 'order not found'}), 404
-    if is_should_update(request_data):
-        email = PARCEL.update_order(request_data['current_location'], request_data['status'], id)
-       #TODO SEND AN EMAIL
-
-        return jsonify({'msg': 'updated successfully'}), 200
-
-
-    else:
-        return jsonify({'msg': 'bad request object, params missing'}), 400
 
 
 @ap.route('/api/v1/parcels/<int:id>/changedest', methods=['PUT'])
@@ -122,8 +105,7 @@ def changedestination(id):
     newdest = rdata['destination_address']
     if not PARCEL.is_parcel_exist(id):
         return jsonify({"msg": "parcel delivery request not found"}), 404
-
-    if not PARCEL.is_order_delivered(id):
+    if not PARCEL.is_parcel_exist(id):
         PARCEL.changedestination(newdest, id)
         return jsonify({'msg': 'updated successfully'}), 200
     else:
@@ -141,18 +123,6 @@ def is_should_update(data):
     if 'current_location' in data and 'status' in data:
         return True
     return False
-
-
-# def sendemail(email, parceltoupdate):
-#     try:
-#         msg = Message("My SendIT Order Delivery Update",
-#                       sender="aacryce@gmail.com",
-#                       recipients=[email])
-#         msg.body = 'hello there'
-#         mail.send(msg)
-#         return jsonify({'msg': 'updated successfully'}), 200
-#     except Exception as identifier:
-#         return jsonify(identifier)
 
 
 def is_valid(email):

@@ -165,7 +165,6 @@ def getpickuplatlng(self, add):
         latlng = locations[0].get('latLng')
         return latlng
     except Exception as identifier:
-        # print('Network Error')
         return {"lat": -24.90629, "lng": 152.19168}
 
 
