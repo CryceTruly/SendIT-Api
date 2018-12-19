@@ -1,6 +1,3 @@
-import os
-
-
 class Parcel():
     def __init__(self, id, pickup_address, destination_address,
                  comment_description, status, current_location,

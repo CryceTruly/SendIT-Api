@@ -1,6 +1,5 @@
 from flask import jsonify, request, Blueprint
 from app.model.parcel import Parcel
-from flask_mail import Mail, Message
 import re
 
 ap = Blueprint('endpoint', __name__)
