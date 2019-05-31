@@ -1,11 +1,11 @@
-from flask import Flask, jsonify, request, Response, json, Blueprint,sessions
+from flask import jsonify, request, Response, json, Blueprint
 
 import datetime
 
 ap = Blueprint('endpoint', __name__)
 parcels = []
 
- 
+
 # GET parcels
 @ap.route('/api/v1/parcels')
 def get_parcels():
@@ -58,13 +58,15 @@ def add_parcel():
         }
         parcels.append(parcel)
         response = Response(response=json.dumps({
-            'msg': "Parcel delivery successfully created", 'request_id': parcel.get('id')}),
+            'msg': "Parcel delivery successfully created", 'request_id':
+            parcel.get('id')}),
             status=201, mimetype="application/json")
         response.headers['Location'] = "parcels/" + str(parcel['id'])
         return response
     else:
-        response = Response(json.dumps({"error": "Invalid Parcel delivery order object" }), 
-        status=400, mimetype="application/json")
+        response = Response(json.dumps({"error":
+                                        "Invalid Parcel delivery order object"}),
+                            status=400, mimetype="application/json")
         return response
 
 
@@ -96,7 +98,8 @@ def cancel_parcel_request(id):
     if len(cancelled_parcel) == 0:
         return jsonify({"msg": "parcel request does not exist"}), 404
 
-    return jsonify({"msg": "parcel request was cancelled successfully", "status": cancelled_parcel.get("status"),
+    return jsonify({"msg": "parcel request was cancelled successfully",
+                    "status": cancelled_parcel.get("status"),
                     "id": cancelled_parcel.get("id")}), 200
 
 
@@ -115,7 +118,7 @@ def is_order_delivered(id):
     checks that we cannot cancel an already delivered order
     '''
     for parcel in parcels:
-        if parcel['id']==id:
-            if parcel['status']=='delivered':
+        if parcel['id'] == id:
+            if parcel['status'] == 'delivered':
                 return True
     return False

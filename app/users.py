@@ -1,14 +1,15 @@
-from flask import Flask, jsonify, request, Response, json, Blueprint
-from app.parcels import parcels
-import datetime
 import re
+import datetime
+from flask import jsonify, request, Blueprint
+from app.parcels import parcels
+
 
 user_print = Blueprint('user_print', __name__)
 users = []
 
+
 @user_print.route('/api/v1/users', methods=['GET'])
 def getall_users():
-    
     ''''
     returns a list of all users
     '''
@@ -16,9 +17,6 @@ def getall_users():
         return jsonify({"msg": "No users yet", "count": len(users)}), 200
 
     return jsonify({"users": users, "count": len(users)}), 200
-
-
-
 
 
 @user_print.route('/api/v1/users', methods=['POST'])
