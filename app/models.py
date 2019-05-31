@@ -1,7 +1,5 @@
-import os
-
-
 class Parcel():
+
     def __init__(self, id, pickup_address, destination_address,
                  comment_description, status, current_location,
                  created,
@@ -28,7 +26,6 @@ class Parcel():
             self.id, self.pickup_address, self.destination_address)
 
 
-parcel = Parcel(1, 'startadd', 'endadd', 'myc comment', 'delivered', 'dest addree', 'now', 1, 'recipt add',
-                '075633333333'
-                , 'testuser@gmail.com')
+parcel = Parcel(1, 'startadd', 'endadd', 'myc comment', 'delivered', 'dest address', 'now', 1, 'recipt add',
+                '075633333333', 'testuser@gmail.com')
 print(parcel)
