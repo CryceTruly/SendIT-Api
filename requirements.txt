@@ -45,7 +45,7 @@ PyYAML==5.1
 requests==2.22.0
 requirements-detector==0.6
 setoptconf==0.2.0
-six==1.11.0
+six==1.14.0
 snowballstemmer==1.2.1
 urllib3==1.25.3
 validate-email==1.3
