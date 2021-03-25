@@ -41,7 +41,7 @@ pylint-django==2.0.2
 pylint-flask==0.5
 pylint-plugin-utils==0.5
 pytest==3.10.0
-PyYAML==5.1
+PyYAML==5.4
 requests==2.22.0
 requirements-detector==0.6
 setoptconf==0.2.0
