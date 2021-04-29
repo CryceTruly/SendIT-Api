@@ -1,0 +1,18 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "02:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: coveralls
+    versions:
+    - 3.0.0
+  - dependency-name: coverage
+    versions:
+    - "5.4"
+  - dependency-name: more-itertools
+    versions:
+    - 8.6.0
