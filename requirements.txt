@@ -34,7 +34,7 @@ py==1.7.0
 pycodestyle==2.5.0
 pydocstyle==3.0.0
 pyflakes==2.1.1
-PyJWT==1.6.4
+PyJWT==2.4.0
 pylint==2.1.1
 pylint-celery==0.3
 pylint-django==2.0.2
